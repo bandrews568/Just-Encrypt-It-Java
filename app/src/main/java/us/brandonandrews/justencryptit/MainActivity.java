@@ -1,5 +1,8 @@
 package us.brandonandrews.justencryptit;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -15,6 +18,8 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.jasypt.exceptions.EncryptionOperationNotPossibleException;
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -24,6 +29,10 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+         final ClipboardManager clipboard = (ClipboardManager)
+                 getSystemService(Context.CLIPBOARD_SERVICE);
+
+        final EditText etPassword = (EditText) findViewById(R.id.etPassword);
         final EditText etEnterText = (EditText) findViewById(R.id.etEnterText);
         final TextView tvFinalText = (TextView) findViewById(R.id.tvFinalText);
 
@@ -33,6 +42,38 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+            }
+        });
+
+        final Button btnMakeText = (Button) findViewById(R.id.btnMakeText);
+        btnMakeText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String finalText;
+                String msg = "Please enter a password";
+                String invalidTextMsg = "Invalid text to decrypt";
+
+                String btnText = (String) btnMakeText.getText();
+                String password = etPassword.getText().toString();
+                String text = etEnterText.getText().toString();
+
+                try {
+                    switch (btnText) {
+                        case "Encrypt":
+                            finalText = Encryption.encrypt(password, text);
+                            tvFinalText.setText(finalText);
+                            break;
+                        case "Decrypt":
+                            finalText = Encryption.decrypt(password, text);
+                            tvFinalText.setText(finalText);
+                            break;
+                    }
+                } catch (IllegalArgumentException e) {
+                    makeToast(msg);
+                } catch (EncryptionOperationNotPossibleException e) {
+                    makeToast(invalidTextMsg);
+                }
+
             }
         });
 
@@ -47,10 +88,12 @@ public class MainActivity extends AppCompatActivity {
                         case R.id.rbEncrypt:
                             String textEncrypt = "Enter text to be encrypted";
                             etEnterText.setHint(textEncrypt);
+                            btnMakeText.setText("Encrypt");
                             break;
                         case R.id.rbDecrypt:
                             String textDecrypt = "Enter text to be decrypted";
                             etEnterText.setHint(textDecrypt);
+                            btnMakeText.setText("Decrypt");
                             break;
                     }
                 }
@@ -62,8 +105,10 @@ public class MainActivity extends AppCompatActivity {
         btnCopy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String msg = "Copied to Clipboard";
-                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+                String msg = "Text copied to clipboard";
+                ClipData text = ClipData.newPlainText("text", tvFinalText.getText());
+                clipboard.setPrimaryClip(text);
+                makeToast(msg);
             }
         });
 
@@ -72,8 +117,12 @@ public class MainActivity extends AppCompatActivity {
         btnPaste.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String msg = "Text Pasted";
-                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+                String msg = "Text pasted from clipboard";
+                ClipData clip = clipboard.getPrimaryClip();
+                ClipData.Item item = clip.getItemAt(0);
+                String text = item.getText().toString();
+                etEnterText.setText(text);
+                makeToast(msg);
             }
         });
 
@@ -86,9 +135,13 @@ public class MainActivity extends AppCompatActivity {
                 String textMsg = "Encrypted or decrypted text";
                 tvFinalText.setText(textMsg);
                 String msg = "Text Cleared";
-                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+                makeToast(msg);
             }
         });
+    }
+
+    public void makeToast(String msg) {
+        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override
