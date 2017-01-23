@@ -3,15 +3,18 @@ package us.brandonandrews.justencryptit;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -40,8 +43,36 @@ public class MainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, tvFinalText.getText());
+                sendIntent.setType("text/plain");
+                startActivity(sendIntent);
+            }
+        });
+
+        SharedPreferences sharedpreferences = getSharedPreferences("password", Context.MODE_PRIVATE);
+        final CheckBox cbSavePassword = (CheckBox) findViewById(R.id.cbSavePassword);
+
+        final SharedPreferences.Editor editor = sharedpreferences.edit();
+        final String getPassword = sharedpreferences.getString("password", "none");
+        boolean savePasswordChecked = sharedpreferences.getBoolean("checked", false);
+
+        if (savePasswordChecked && !getPassword.equals("none")) {
+            etPassword.setText(getPassword);
+            cbSavePassword.setChecked(true);
+        }
+
+        cbSavePassword.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (cbSavePassword.isChecked()){
+                    editor.putString("password", etPassword.getText().toString());
+                    editor.putBoolean("checked", true);
+                } else {
+                    editor.putBoolean("checked", false);
+                }
+                editor.commit();
             }
         });
 
@@ -134,10 +165,24 @@ public class MainActivity extends AppCompatActivity {
                 etEnterText.setText("");
                 String textMsg = "Encrypted or decrypted text";
                 tvFinalText.setText(textMsg);
-                String msg = "Text Cleared";
+                String msg = "Text cleared";
                 makeToast(msg);
             }
         });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // TODO: Clean this up later!
+        SharedPreferences sharedpreferences = getSharedPreferences("password", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedpreferences.edit();
+        CheckBox cbSavePassword = (CheckBox) findViewById(R.id.cbSavePassword);
+        EditText etPassword = (EditText) findViewById(R.id.etPassword);
+        if (cbSavePassword.isChecked()) {
+            editor.putString("password", etPassword.getText().toString());
+            editor.commit();
+        }
     }
 
     public void makeToast(String msg) {
