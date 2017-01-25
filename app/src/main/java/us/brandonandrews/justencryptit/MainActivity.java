@@ -5,6 +5,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -76,35 +77,23 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // TODO: async this task
         final Button btnMakeText = (Button) findViewById(R.id.btnMakeText);
         btnMakeText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String finalText;
-                String msg = "Please enter a password";
-                String invalidTextMsg = "Invalid text to decrypt";
-
                 String btnText = (String) btnMakeText.getText();
                 String password = etPassword.getText().toString();
                 String text = etEnterText.getText().toString();
 
-                try {
-                    switch (btnText) {
-                        case "Encrypt":
-                            finalText = Encryption.encrypt(password, text);
-                            tvFinalText.setText(finalText);
-                            break;
-                        case "Decrypt":
-                            finalText = Encryption.decrypt(password, text);
-                            tvFinalText.setText(finalText);
-                            break;
-                    }
-                } catch (IllegalArgumentException e) {
-                    makeToast(msg);
-                } catch (EncryptionOperationNotPossibleException e) {
-                    makeToast(invalidTextMsg);
+                switch (btnText) {
+                    case "Encrypt":
+                        new AsyncCreateText().execute(password, text, "encrypt");
+                        break;
+                    case "Decrypt":
+                        new AsyncCreateText().execute(password, text, "decrypt");
+                        break;
                 }
-
             }
         });
 
@@ -148,12 +137,19 @@ public class MainActivity extends AppCompatActivity {
         btnPaste.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String msg = "Text pasted from clipboard";
-                ClipData clip = clipboard.getPrimaryClip();
-                ClipData.Item item = clip.getItemAt(0);
-                String text = item.getText().toString();
-                etEnterText.setText(text);
-                makeToast(msg);
+                try {
+                    String msg = "Text pasted from clipboard";
+                    ClipData clip = clipboard.getPrimaryClip();
+                    ClipData.Item item = clip.getItemAt(0);
+                    String text = item.getText().toString();
+                    etEnterText.setText(text);
+                    makeToast(msg);
+                } catch (NullPointerException e) {
+                    // Nothing in clipboard to paste
+                    String msg = "Nothing to paste";
+                    makeToast(msg);
+                }
+
             }
         });
 
@@ -163,8 +159,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 etEnterText.setText("");
-                String textMsg = "Encrypted or decrypted text";
-                tvFinalText.setText(textMsg);
+                tvFinalText.setText("");
                 String msg = "Text cleared";
                 makeToast(msg);
             }
@@ -174,7 +169,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        // TODO: Clean this up later!
         SharedPreferences sharedpreferences = getSharedPreferences("password", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
         CheckBox cbSavePassword = (CheckBox) findViewById(R.id.cbSavePassword);
@@ -183,10 +177,6 @@ public class MainActivity extends AppCompatActivity {
             editor.putString("password", etPassword.getText().toString());
             editor.commit();
         }
-    }
-
-    public void makeToast(String msg) {
-        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -207,7 +197,53 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
+    }
+
+    public void makeToast(String msg) {
+        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+    }
+
+    private class AsyncCreateText extends AsyncTask<String, Void, String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            String finalText;
+            String password = params[0];
+            String text = params[1];
+            String type = params[2];
+
+            try {
+                if (type.equals("encrypt")) {
+                    finalText = Encryption.encrypt(password, text);
+                } else if (type.equals("decrypt")){
+                    finalText = Encryption.decrypt(password, text);
+                } else {
+                    finalText = "";
+                }
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+                return "IllegalArgument";
+            } catch (EncryptionOperationNotPossibleException e) {
+                e.printStackTrace();
+                return "Can't decrypt";
+            }
+            return finalText;
+        }
+
+        @Override
+        protected void onPostExecute(String text) {
+            String invalidPassword = "Please enter a password";
+            String invalidTextMsg = "Invalid text to decrypt";
+
+            if (text.equals("IllegalArgument")) {
+                makeToast(invalidPassword);
+            } else if (text.equals("Can't decrypt")) {
+                makeToast(invalidTextMsg);
+            } else {
+                TextView tvFinalText = (TextView) findViewById(R.id.tvFinalText);
+                tvFinalText.setText(text);
+            }
+        }
     }
 }
