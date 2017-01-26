@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -158,10 +159,25 @@ public class MainActivity extends AppCompatActivity {
         btnClear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                final String tempEnterText = etEnterText.getText().toString();
+                final String tempFinalText = tvFinalText.getText().toString();
+
                 etEnterText.setText("");
                 tvFinalText.setText("");
-                String msg = "Text cleared";
-                makeToast(msg);
+
+                Snackbar snackbar = Snackbar
+                        .make(v, "Text cleared", Snackbar.LENGTH_LONG)
+                        .setAction("UNDO", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                etEnterText.setText(tempEnterText);
+                                tvFinalText.setText(tempFinalText);
+                                Snackbar snackbarUndo = Snackbar.make(view,
+                                        "Text restored", Snackbar.LENGTH_SHORT);
+                                snackbarUndo.show();
+                            }
+                        });
+                snackbar.show();
             }
         });
     }
