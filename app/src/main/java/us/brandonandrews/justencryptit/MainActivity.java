@@ -36,12 +36,28 @@ public class MainActivity extends AppCompatActivity {
 
          final ClipboardManager clipboard = (ClipboardManager)
                  getSystemService(Context.CLIPBOARD_SERVICE);
-
         final EditText etPassword = (EditText) findViewById(R.id.etPassword);
         final EditText etEnterText = (EditText) findViewById(R.id.etEnterText);
         final TextView tvFinalText = (TextView) findViewById(R.id.tvFinalText);
-
+        final CheckBox cbSavePassword = (CheckBox) findViewById(R.id.cbSavePassword);
+        final Button btnMakeText = (Button) findViewById(R.id.btnMakeText);
+        Button btnClear = (Button) findViewById(R.id.btnClear);
+        Button btnCopy = (Button) findViewById(R.id.btnCopy);
+        Button btnPaste = (Button) findViewById(R.id.btnPaste);
+        RadioGroup rbEncryptOrDecrypt = (RadioGroup) findViewById(R.id.rgEncryptOrDecrypt);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        SharedPreferences sharedpreferences = getSharedPreferences("password", Context.MODE_PRIVATE);
+        final SharedPreferences.Editor editor = sharedpreferences.edit();
+        final String getPassword = sharedpreferences.getString("password", "none");
+        boolean savePasswordChecked = sharedpreferences.getBoolean("checked", false);
+
+        if (savePasswordChecked && !getPassword.equals("none")) {
+            etPassword.setText(getPassword);
+            cbSavePassword.setChecked(true);
+        }
+
+
+        // Fab button
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -53,18 +69,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        SharedPreferences sharedpreferences = getSharedPreferences("password", Context.MODE_PRIVATE);
-        final CheckBox cbSavePassword = (CheckBox) findViewById(R.id.cbSavePassword);
-
-        final SharedPreferences.Editor editor = sharedpreferences.edit();
-        final String getPassword = sharedpreferences.getString("password", "none");
-        boolean savePasswordChecked = sharedpreferences.getBoolean("checked", false);
-
-        if (savePasswordChecked && !getPassword.equals("none")) {
-            etPassword.setText(getPassword);
-            cbSavePassword.setChecked(true);
-        }
-
+        // Save password checkbox
         cbSavePassword.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -78,7 +83,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        final Button btnMakeText = (Button) findViewById(R.id.btnMakeText);
+        // Button to encrypt or decrypt the text
+        // Delegates the actual task to AsyncCreateText on a separate thread
         btnMakeText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -98,7 +104,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Check to see if user has selected `encrypt` or `decrypt`
-        RadioGroup rbEncryptOrDecrypt = (RadioGroup) findViewById(R.id.rgEncryptOrDecrypt);
         rbEncryptOrDecrypt.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -121,7 +126,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Copy button
-        Button btnCopy = (Button) findViewById(R.id.btnCopy);
         btnCopy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -133,7 +137,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Paste button
-        Button btnPaste = (Button) findViewById(R.id.btnPaste);
         btnPaste.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -154,7 +157,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Clear button
-        Button btnClear = (Button) findViewById(R.id.btnClear);
         btnClear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -196,19 +198,16 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+        // TODO: custom settings
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+        // TODO: custom settings
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
