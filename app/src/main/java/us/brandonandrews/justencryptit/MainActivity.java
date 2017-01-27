@@ -78,7 +78,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // TODO: async this task
         final Button btnMakeText = (Button) findViewById(R.id.btnMakeText);
         btnMakeText.setOnClickListener(new View.OnClickListener() {
             @Override
