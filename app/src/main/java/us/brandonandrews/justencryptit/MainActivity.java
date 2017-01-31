@@ -198,17 +198,18 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // TODO: custom settings
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // TODO: custom settings
+
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
+            Intent intent = new Intent(this, SettingsActivity.class);
+            startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);
