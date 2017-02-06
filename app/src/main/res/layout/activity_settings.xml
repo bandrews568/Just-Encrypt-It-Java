@@ -23,7 +23,7 @@
 
         <EditText
             android:layout_width="170dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:inputType="textPersonName"
             android:ems="10"
             android:id="@+id/etCustomPasswordName1"
@@ -31,7 +31,7 @@
 
         <EditText
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:inputType="textPassword"
             android:ems="10"
             android:id="@+id/etCustomPassword1"
@@ -55,7 +55,7 @@
 
         <EditText
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:inputType="textPassword"
             android:ems="10"
             android:id="@+id/etCustomPassword2"
@@ -70,7 +70,7 @@
         >
 
         <EditText
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:inputType="textPersonName"
             android:ems="10"
             android:id="@+id/etCustomPasswordName3"
@@ -79,7 +79,7 @@
 
         <EditText
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:inputType="textPassword"
             android:ems="10"
             android:id="@+id/etCustomPassword3"
