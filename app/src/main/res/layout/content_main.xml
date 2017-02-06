@@ -36,7 +36,7 @@
         app:layout_constraintLeft_toRightOf="@+id/tvPassword"/>
 
     <CheckBox
-        android:text="Remember Password"
+        android:text="Save Password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/cbSavePassword"
@@ -64,7 +64,7 @@
         app:layout_constraintTop_toBottomOf="@+id/rgEncryptOrDecrypt"/>
 
     <Button
-        android:text="Copy"
+        android:text="Copy ⇩"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:id="@+id/btnCopy"
@@ -73,7 +73,7 @@
         android:layout_marginEnd="4dp"/>
 
     <Button
-        android:text="Paste"
+        android:text="Paste  ⇧"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:id="@+id/btnPaste"
@@ -124,8 +124,7 @@
         <Spinner
             android:layout_height="match_parent"
             android:id="@+id/spinnerCustomPasswords"
-            android:layout_width="220dp"
-            android:paddingLeft="20dp"/>
+            android:layout_width="wrap_content"/>
 
     </RadioGroup>
 
