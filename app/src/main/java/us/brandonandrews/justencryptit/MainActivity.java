@@ -71,6 +71,13 @@ public class MainActivity extends AppCompatActivity {
         spinnerOptions.add("Saved Passwords");
         spinnerCustomPassword.setVisibility(View.INVISIBLE);
 
+        // Check to see if user has checked that they wanted to remember a password.
+        // If so, populate etPassword with that password.
+        if (savePasswordChecked && !getPassword.equals("none")) {
+            etPassword.setText(getPassword);
+            cbSavePassword.setChecked(true);
+        }
+
         // Spinner adapter
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this,
                 android.R.layout.simple_spinner_item, spinnerOptions) {
@@ -101,6 +108,7 @@ public class MainActivity extends AppCompatActivity {
         spinnerCustomPassword.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                // position 0 is the text `Saved Passwords`
                 if (position > 0) {
                     String setPasswordEditText = sharedpreferences.getString(customPassword[position - 1], "");
                     etPassword.setText(setPasswordEditText);
@@ -115,13 +123,6 @@ public class MainActivity extends AppCompatActivity {
 
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCustomPassword.setAdapter(spinnerAdapter);
-
-
-        if (savePasswordChecked && !getPassword.equals("none")) {
-            etPassword.setText(getPassword);
-            cbSavePassword.setChecked(true);
-        }
-
 
         // Fab button
         fab.setOnClickListener(new View.OnClickListener() {
