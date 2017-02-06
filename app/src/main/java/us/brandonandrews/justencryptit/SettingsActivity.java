@@ -42,20 +42,22 @@ public class SettingsActivity extends AppCompatActivity {
                                                  etCustomPassword3};
 
         prefs = getSharedPreferences("password", Context.MODE_PRIVATE);
-
-        for (int i = 0; i < 3; i++) {
-            String getCustomPasswordName = prefs.getString(customPasswordNames[i], "");
-            String getCustomPassword = prefs.getString(customPassword[i], "");
-            customPasswordNameEditText[i].setText(getCustomPasswordName);
-            customPasswordEditText[i].setText(getCustomPassword);
-
-        }
+        getPasswordSettings();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         setPasswordSettings();
+    }
+
+    private void getPasswordSettings() {
+        for (int i = 0; i < 3; i++) {
+            String getCustomPasswordName = prefs.getString(customPasswordNames[i], "");
+            String getCustomPassword = prefs.getString(customPassword[i], "");
+            customPasswordNameEditText[i].setText(getCustomPasswordName);
+            customPasswordEditText[i].setText(getCustomPassword);
+        }
     }
 
     private void setPasswordSettings() {
