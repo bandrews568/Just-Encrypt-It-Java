@@ -10,6 +10,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -22,6 +23,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -61,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
         Button btnClear = (Button) findViewById(R.id.btnClear);
         Button btnCopy = (Button) findViewById(R.id.btnCopy);
         Button btnPaste = (Button) findViewById(R.id.btnPaste);
+        ImageButton btnZoom = (ImageButton) findViewById(R.id.btnZoom);
 
         final CheckBox cbSavePassword = (CheckBox) findViewById(R.id.cbSavePassword);
         RadioGroup rbEncryptOrDecrypt = (RadioGroup) findViewById(R.id.rgEncryptOrDecrypt);
@@ -246,6 +249,20 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
                 snackbar.show();
+            }
+        });
+
+        btnZoom.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (!tvFinalText.getText().toString().equals("")) {
+                    FragmentManager fm = getSupportFragmentManager();
+                    ZoomDialog editNameDialogFragment =
+                            ZoomDialog.newInstance(tvFinalText.getText().toString());
+                    editNameDialogFragment.show(fm, "fragment_edit_name");
+                } else {
+                    makeToast("No text to zoom");
+                }
             }
         });
     }
