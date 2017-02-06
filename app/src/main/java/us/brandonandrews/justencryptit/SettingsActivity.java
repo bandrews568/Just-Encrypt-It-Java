@@ -11,6 +11,7 @@ import android.widget.EditText;
 
 public class SettingsActivity extends AppCompatActivity {
 
+    public static final int CUSTOM_PASSWORD_MAX = 3;
     private SharedPreferences prefs;
     public static EditText[] customPasswordNameEditText;
     public static EditText[] customPasswordEditText;
@@ -52,7 +53,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private void getPasswordSettings() {
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < CUSTOM_PASSWORD_MAX; i++) {
             String getCustomPasswordName = prefs.getString(customPasswordNames[i], "");
             String getCustomPassword = prefs.getString(customPassword[i], "");
             customPasswordNameEditText[i].setText(getCustomPasswordName);
@@ -63,7 +64,7 @@ public class SettingsActivity extends AppCompatActivity {
     private void setPasswordSettings() {
         SharedPreferences.Editor editor = prefs.edit();
 
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < CUSTOM_PASSWORD_MAX; i++) {
             String currentCustomPasswordName = customPasswordNames[i];
             String currentCustomPassword = customPassword[i];
             EditText currentCustomPasswordNameEt = customPasswordNameEditText[i];
