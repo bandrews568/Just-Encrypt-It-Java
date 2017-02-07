@@ -17,6 +17,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -24,8 +25,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
 
          final ClipboardManager clipboard = (ClipboardManager)
                  getSystemService(Context.CLIPBOARD_SERVICE);
+        final InputMethodManager keyboardManager = (InputMethodManager)
+                getSystemService(Context.INPUT_METHOD_SERVICE);
 
         final SharedPreferences sharedpreferences = getSharedPreferences("password", Context.MODE_PRIVATE);
         final SharedPreferences.Editor editor = sharedpreferences.edit();
@@ -59,14 +60,15 @@ public class MainActivity extends AppCompatActivity {
         final EditText etEnterText = (EditText) findViewById(R.id.etEnterText);
         final TextView tvFinalText = (TextView) findViewById(R.id.tvFinalText);
 
-        final Button btnMakeText = (Button) findViewById(R.id.btnMakeText);
+//        final Button btnMakeText = (Button) findViewById(R.id.btnMakeText);
+        Button btnEncrypt = (Button) findViewById(R.id.btnEncrypt);
+        Button btnDecrypt = (Button) findViewById(R.id.btnDecrypt);
         Button btnClear = (Button) findViewById(R.id.btnClear);
         Button btnCopy = (Button) findViewById(R.id.btnCopy);
         Button btnPaste = (Button) findViewById(R.id.btnPaste);
         ImageButton btnZoom = (ImageButton) findViewById(R.id.btnZoom);
 
         final CheckBox cbSavePassword = (CheckBox) findViewById(R.id.cbSavePassword);
-        RadioGroup rbEncryptOrDecrypt = (RadioGroup) findViewById(R.id.rgEncryptOrDecrypt);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
 
         Spinner spinnerCustomPassword = (Spinner) findViewById(R.id.spinnerCustomPasswords);
@@ -153,45 +155,25 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Button to encrypt or decrypt the text
-        // Delegates the actual task to AsyncCreateText on a separate thread
-        btnMakeText.setOnClickListener(new View.OnClickListener() {
+        // Encrypt button
+        btnEncrypt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String btnText = (String) btnMakeText.getText();
                 String password = etPassword.getText().toString();
                 String text = etEnterText.getText().toString();
-
-                switch (btnText) {
-                    case "Encrypt":
-                        new AsyncCreateText().execute(password, text, "encrypt");
-                        break;
-                    case "Decrypt":
-                        new AsyncCreateText().execute(password, text, "decrypt");
-                        break;
-                }
+                new AsyncCreateText().execute(password, text, "encrypt");
+                keyboardManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
             }
         });
 
-        // Check to see if user has selected `encrypt` or `decrypt`
-        rbEncryptOrDecrypt.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        // Decrypt button
+        btnDecrypt.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
-                RadioButton rb = (RadioButton) group.findViewById(checkedId);
-                if (null != rb && checkedId > -1) {
-                    switch (rb.getId()) {
-                        case R.id.rbEncrypt:
-                            String textEncrypt = "Enter text to be encrypted";
-                            etEnterText.setHint(textEncrypt);
-                            btnMakeText.setText("Encrypt");
-                            break;
-                        case R.id.rbDecrypt:
-                            String textDecrypt = "Enter text to be decrypted";
-                            etEnterText.setHint(textDecrypt);
-                            btnMakeText.setText("Decrypt");
-                            break;
-                    }
-                }
+            public void onClick(View v) {
+                String password = etPassword.getText().toString();
+                String text = etEnterText.getText().toString();
+                new AsyncCreateText().execute(password, text, "decrypt");
+                keyboardManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
             }
         });
 

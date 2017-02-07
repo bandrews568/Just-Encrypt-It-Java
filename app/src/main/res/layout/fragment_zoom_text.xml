@@ -11,21 +11,22 @@
         android:layout_marginLeft="50dp"
         android:layout_weight="0.33"
         android:layout_marginTop="30dp"
-        android:padding="10dp">
+        >
 
         <TextView
             android:text="TextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/tvZoomText"
-            />
+            android:layout_margin="10dp"
+            android:paddingRight="50dp"/>
     </ScrollView>
 
     <Button
         android:text="Close"
         android:layout_width="140dp"
         android:layout_height="wrap_content"
-        android:id="@+id/button"
+        android:id="@+id/btnClose"
         android:layout_gravity="center_horizontal"/>
 
 </LinearLayout>
