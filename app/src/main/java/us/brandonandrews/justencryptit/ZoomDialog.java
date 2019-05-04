@@ -2,6 +2,7 @@ package us.brandonandrews.justencryptit;
 
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -26,26 +27,24 @@ public class ZoomDialog extends DialogFragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater,
+    public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_zoom_text, container);
     }
 
     @Override
 
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        TextView userText = (TextView) view.findViewById(R.id.tvZoomText);
-        Button btnClose = (Button) view.findViewById(R.id.btnClose);
-        String text = getArguments().getString("text", "");
-        userText.setText(text);
+        TextView userText = view.findViewById(R.id.tvZoomText);
+        Button btnClose = view.findViewById(R.id.btnClose);
 
-        btnClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getDialog().dismiss();
-            }
-        });
+        if (getArguments() != null) {
+            String text = getArguments().getString("text", "");
+            userText.setText(text);
+        }
+
+        btnClose.setOnClickListener(v -> getDialog().dismiss());
     }
 }

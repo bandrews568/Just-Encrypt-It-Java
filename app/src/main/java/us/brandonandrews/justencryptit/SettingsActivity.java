@@ -27,13 +27,13 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        EditText etCustomPasswordName1 = (EditText) findViewById(R.id.etCustomPasswordName1);
-        EditText etCustomPasswordName2 = (EditText) findViewById(R.id.etCustomPasswordName2);
-        EditText etCustomPasswordName3 = (EditText) findViewById(R.id.etCustomPasswordName3);
+        EditText etCustomPasswordName1 = findViewById(R.id.etCustomPasswordName1);
+        EditText etCustomPasswordName2 = findViewById(R.id.etCustomPasswordName2);
+        EditText etCustomPasswordName3 = findViewById(R.id.etCustomPasswordName3);
 
-        EditText etCustomPassword1 = (EditText) findViewById(R.id.etCustomPassword1);
-        EditText etCustomPassword2 = (EditText) findViewById(R.id.etCustomPassword2);
-        EditText etCustomPassword3 = (EditText) findViewById(R.id.etCustomPassword3);
+        EditText etCustomPassword1 = findViewById(R.id.etCustomPassword1);
+        EditText etCustomPassword2 = findViewById(R.id.etCustomPassword2);
+        EditText etCustomPassword3 = findViewById(R.id.etCustomPassword3);
 
         customPasswordNameEditText = new EditText[] {etCustomPasswordName1,
                                                      etCustomPasswordName2,

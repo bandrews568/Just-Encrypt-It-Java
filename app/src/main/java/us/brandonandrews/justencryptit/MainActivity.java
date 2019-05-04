@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
@@ -43,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
          final ClipboardManager clipboard = (ClipboardManager)
@@ -56,22 +57,21 @@ public class MainActivity extends AppCompatActivity {
         final String getPassword = sharedpreferences.getString("password", "none");
         boolean savePasswordChecked = sharedpreferences.getBoolean("checked", false);
 
-        final EditText etPassword = (EditText) findViewById(R.id.etPassword);
-        final EditText etEnterText = (EditText) findViewById(R.id.etEnterText);
-        final TextView tvFinalText = (TextView) findViewById(R.id.tvFinalText);
+        final EditText etPassword = findViewById(R.id.etPassword);
+        final EditText etEnterText = findViewById(R.id.etEnterText);
+        final TextView tvFinalText = findViewById(R.id.tvFinalText);
 
-//        final Button btnMakeText = (Button) findViewById(R.id.btnMakeText);
-        Button btnEncrypt = (Button) findViewById(R.id.btnEncrypt);
-        Button btnDecrypt = (Button) findViewById(R.id.btnDecrypt);
-        Button btnClear = (Button) findViewById(R.id.btnClear);
-        Button btnCopy = (Button) findViewById(R.id.btnCopy);
-        Button btnPaste = (Button) findViewById(R.id.btnPaste);
-        ImageButton btnZoom = (ImageButton) findViewById(R.id.btnZoom);
+        Button btnEncrypt = findViewById(R.id.btnEncrypt);
+        Button btnDecrypt = findViewById(R.id.btnDecrypt);
+        Button btnClear = findViewById(R.id.btnClear);
+        Button btnCopy = findViewById(R.id.btnCopy);
+        Button btnPaste = findViewById(R.id.btnPaste);
+        ImageButton btnZoom = findViewById(R.id.btnZoom);
 
-        final CheckBox cbSavePassword = (CheckBox) findViewById(R.id.cbSavePassword);
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        final CheckBox cbSavePassword = findViewById(R.id.cbSavePassword);
+        FloatingActionButton fab = findViewById(R.id.fab);
 
-        Spinner spinnerCustomPassword = (Spinner) findViewById(R.id.spinnerCustomPasswords);
+        Spinner spinnerCustomPassword = findViewById(R.id.spinnerCustomPasswords);
         ArrayList<String> spinnerOptions = new ArrayList<>();
         spinnerOptions.add("Saved Passwords");
         spinnerCustomPassword.setVisibility(View.INVISIBLE);
@@ -89,15 +89,11 @@ public class MainActivity extends AppCompatActivity {
             // Used to disable `Saved Passwords`
             @Override
             public boolean isEnabled(int position){
-                if(position == 0) {
-                    return false;
-                } else {
-                    return true;
-                }
+                return position != 0;
             }
 
             @Override
-            public View getDropDownView(int position, View convertView, ViewGroup parent) {
+            public View getDropDownView(int position, View convertView, @NonNull ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
                 TextView tv = (TextView) view;
                 if (position==0) {
@@ -130,121 +126,112 @@ public class MainActivity extends AppCompatActivity {
         spinnerCustomPassword.setAdapter(spinnerAdapter);
 
         // Fab button
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent sendIntent = new Intent();
-                sendIntent.setAction(Intent.ACTION_SEND);
-                sendIntent.putExtra(Intent.EXTRA_TEXT, tvFinalText.getText());
-                sendIntent.setType("text/plain");
-                startActivity(sendIntent);
-            }
+        fab.setOnClickListener(view -> {
+            Intent sendIntent = new Intent();
+            sendIntent.setAction(Intent.ACTION_SEND);
+            sendIntent.putExtra(Intent.EXTRA_TEXT, tvFinalText.getText());
+            sendIntent.setType("text/plain");
+            startActivity(sendIntent);
         });
 
         // Save password checkbox
-        cbSavePassword.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (cbSavePassword.isChecked()){
-                    editor.putString("password", etPassword.getText().toString());
-                    editor.putBoolean("checked", true);
-                } else {
-                    editor.putBoolean("checked", false);
-                }
-                editor.commit();
+        cbSavePassword.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (cbSavePassword.isChecked()){
+                editor.putString("password", etPassword.getText().toString());
+                editor.putBoolean("checked", true);
+            } else {
+                editor.putBoolean("checked", false);
             }
+            editor.commit();
         });
 
         // Encrypt button
-        btnEncrypt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String password = etPassword.getText().toString();
-                String text = etEnterText.getText().toString();
-                new AsyncCreateText().execute(password, text, "encrypt");
+        btnEncrypt.setOnClickListener(v -> {
+            String password = etPassword.getText().toString();
+            String text = etEnterText.getText().toString();
+            new AsyncCreateText().execute(password, text, "encrypt");
+
+            if (keyboardManager != null) {
                 keyboardManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
             }
         });
 
         // Decrypt button
-        btnDecrypt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String password = etPassword.getText().toString();
-                String text = etEnterText.getText().toString();
-                new AsyncCreateText().execute(password, text, "decrypt");
+        btnDecrypt.setOnClickListener(v -> {
+            String password = etPassword.getText().toString();
+            String text = etEnterText.getText().toString();
+            new AsyncCreateText().execute(password, text, "decrypt");
+
+            if (keyboardManager != null) {
                 keyboardManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
             }
         });
 
         // Copy button
-        btnCopy.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String msg = "Text copied to clipboard";
-                ClipData text = ClipData.newPlainText("text", tvFinalText.getText());
+        btnCopy.setOnClickListener(v -> {
+            String msg = "Text copied to clipboard";
+            ClipData text = ClipData.newPlainText("text", tvFinalText.getText());
+
+            if (clipboard != null) {
                 clipboard.setPrimaryClip(text);
-                makeToast(msg);
             }
+
+            makeToast(msg);
         });
 
         // Paste button
-        btnPaste.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                try {
+        btnPaste.setOnClickListener(v -> {
+            try {
+
+                if (clipboard != null) {
                     String msg = "Text pasted from clipboard";
                     ClipData clip = clipboard.getPrimaryClip();
-                    ClipData.Item item = clip.getItemAt(0);
-                    String text = item.getText().toString();
-                    etEnterText.setText(text);
-                    makeToast(msg);
-                } catch (NullPointerException e) {
-                    // Nothing in clipboard to paste
-                    String msg = "Nothing to paste";
-                    makeToast(msg);
+
+                    if (clip != null) {
+                        ClipData.Item item = clip.getItemAt(0);
+                        String text = item.getText().toString();
+                        etEnterText.setText(text);
+                        makeToast(msg);
+                    }
+
                 }
 
+            } catch (NullPointerException e) {
+                // Nothing in clipboard to paste
+                String msg = "Nothing to paste";
+                makeToast(msg);
             }
+
         });
 
         // Clear button
-        btnClear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final String tempEnterText = etEnterText.getText().toString();
-                final String tempFinalText = tvFinalText.getText().toString();
+        btnClear.setOnClickListener(v -> {
+            final String tempEnterText = etEnterText.getText().toString();
+            final String tempFinalText = tvFinalText.getText().toString();
 
-                etEnterText.setText("");
-                tvFinalText.setText("");
+            etEnterText.setText("");
+            tvFinalText.setText("");
 
-                Snackbar snackbar = Snackbar
-                        .make(v, "Text cleared", Snackbar.LENGTH_LONG)
-                        .setAction("UNDO", new View.OnClickListener() {
-                            @Override
-                            public void onClick(View view) {
-                                etEnterText.setText(tempEnterText);
-                                tvFinalText.setText(tempFinalText);
-                                Snackbar snackbarUndo = Snackbar.make(view,
-                                        "Text restored", Snackbar.LENGTH_SHORT);
-                                snackbarUndo.show();
-                            }
-                        });
-                snackbar.show();
-            }
+            Snackbar snackbar = Snackbar
+                    .make(v, "Text cleared", Snackbar.LENGTH_LONG)
+                    .setAction("UNDO", view -> {
+                        etEnterText.setText(tempEnterText);
+                        tvFinalText.setText(tempFinalText);
+                        Snackbar snackbarUndo = Snackbar.make(view,
+                                "Text restored", Snackbar.LENGTH_SHORT);
+                        snackbarUndo.show();
+                    });
+            snackbar.show();
         });
 
-        btnZoom.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!tvFinalText.getText().toString().equals("")) {
-                    FragmentManager fm = getSupportFragmentManager();
-                    ZoomDialog editNameDialogFragment =
-                            ZoomDialog.newInstance(tvFinalText.getText().toString());
-                    editNameDialogFragment.show(fm, "fragment_edit_name");
-                } else {
-                    makeToast("No text to zoom");
-                }
+        btnZoom.setOnClickListener(v -> {
+            if (!tvFinalText.getText().toString().equals("")) {
+                FragmentManager fm = getSupportFragmentManager();
+                ZoomDialog editNameDialogFragment =
+                        ZoomDialog.newInstance(tvFinalText.getText().toString());
+                editNameDialogFragment.show(fm, "fragment_edit_name");
+            } else {
+                makeToast("No text to zoom");
             }
         });
     }
@@ -254,8 +241,9 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         SharedPreferences sharedpreferences = getSharedPreferences("password", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedpreferences.edit();
-        CheckBox cbSavePassword = (CheckBox) findViewById(R.id.cbSavePassword);
-        EditText etPassword = (EditText) findViewById(R.id.etPassword);
+        CheckBox cbSavePassword = findViewById(R.id.cbSavePassword);
+        EditText etPassword = findViewById(R.id.etPassword);
+
         if (cbSavePassword.isChecked()) {
             editor.putString("password", etPassword.getText().toString());
             editor.commit();
@@ -309,12 +297,16 @@ public class MainActivity extends AppCompatActivity {
             String type = params[2];
 
             try {
-                if (type.equals("encrypt")) {
-                    finalText = Encryption.encrypt(password, text);
-                } else if (type.equals("decrypt")){
-                    finalText = Encryption.decrypt(password, text);
-                } else {
-                    finalText = "";
+                switch (type) {
+                    case "encrypt":
+                        finalText = Encryption.encrypt(password, text);
+                        break;
+                    case "decrypt":
+                        finalText = Encryption.decrypt(password, text);
+                        break;
+                    default:
+                        finalText = "";
+                        break;
                 }
             } catch (IllegalArgumentException e) {
                 e.printStackTrace();
@@ -331,13 +323,17 @@ public class MainActivity extends AppCompatActivity {
             String invalidPassword = "Please enter a password";
             String invalidTextMsg = "Invalid text to decrypt";
 
-            if (text.equals("IllegalArgument")) {
-                makeToast(invalidPassword);
-            } else if (text.equals("Can't decrypt")) {
-                makeToast(invalidTextMsg);
-            } else {
-                TextView tvFinalText = (TextView) findViewById(R.id.tvFinalText);
-                tvFinalText.setText(text);
+            switch (text) {
+                case "IllegalArgument":
+                    makeToast(invalidPassword);
+                    break;
+                case "Can't decrypt":
+                    makeToast(invalidTextMsg);
+                    break;
+                default:
+                    TextView tvFinalText = findViewById(R.id.tvFinalText);
+                    tvFinalText.setText(text);
+                    break;
             }
         }
     }

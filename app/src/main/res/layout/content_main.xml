@@ -151,15 +151,15 @@
         tools:layout_editor_absoluteX="0dp"/>
 
     <ImageButton
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_zoom_in_black_24dp"
         android:id="@+id/btnZoom"
         style="@android:style/Widget.ImageButton"
-        android:background="@drawable/ic_zoom_in_black_24dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:drawable/ic_menu_zoom"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline6"/>
+        app:layout_constraintTop_toTopOf="@+id/guideline6"
+        app:srcCompat="@android:drawable/ic_menu_zoom" />
 
     <ScrollView
         android:layout_width="0dp"
