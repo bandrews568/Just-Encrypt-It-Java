@@ -1,7 +1,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto"
       xmlns:tools="http://schemas.android.com/tools"
-      tools:context="us.brandonandrews.justencryptit.MainActivity">
+      tools:context="us.brandonandrews.justencryptit.ui.main.MainActivity">
+    <item
+        android:id="@+id/action_about"
+        android:title="About" />
     <item
         android:id="@+id/action_settings"
         android:orderInCategory="100"

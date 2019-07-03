@@ -1,14 +1,17 @@
-package us.brandonandrews.justencryptit;
+package us.brandonandrews.justencryptit.ui;
 
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.DialogFragment;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import us.brandonandrews.justencryptit.R;
 
 public class ZoomDialog extends DialogFragment {
 
@@ -26,26 +29,24 @@ public class ZoomDialog extends DialogFragment {
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater,
+    public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_zoom_text, container);
     }
 
     @Override
 
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        TextView userText = (TextView) view.findViewById(R.id.tvZoomText);
-        Button btnClose = (Button) view.findViewById(R.id.btnClose);
-        String text = getArguments().getString("text", "");
-        userText.setText(text);
+        TextView userText = view.findViewById(R.id.tvZoomText);
+        Button btnClose = view.findViewById(R.id.btnClose);
 
-        btnClose.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                getDialog().dismiss();
-            }
-        });
+        if (getArguments() != null) {
+            String text = getArguments().getString("text", "");
+            userText.setText(text);
+        }
+
+        btnClose.setOnClickListener(v -> getDialog().dismiss());
     }
 }

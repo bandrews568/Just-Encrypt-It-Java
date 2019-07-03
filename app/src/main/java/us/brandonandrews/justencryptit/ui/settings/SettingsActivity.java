@@ -1,14 +1,18 @@
-package us.brandonandrews.justencryptit;
+package us.brandonandrews.justencryptit.ui.settings;
 
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import android.widget.EditText;
 
+import us.brandonandrews.justencryptit.R;
 
+/**
+ * Change this to a PreferenceActivity
+ */
 public class SettingsActivity extends AppCompatActivity {
 
     public static final int CUSTOM_PASSWORD_MAX = 3;
@@ -27,13 +31,13 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        EditText etCustomPasswordName1 = (EditText) findViewById(R.id.etCustomPasswordName1);
-        EditText etCustomPasswordName2 = (EditText) findViewById(R.id.etCustomPasswordName2);
-        EditText etCustomPasswordName3 = (EditText) findViewById(R.id.etCustomPasswordName3);
+        EditText etCustomPasswordName1 = findViewById(R.id.etCustomPasswordName1);
+        EditText etCustomPasswordName2 = findViewById(R.id.etCustomPasswordName2);
+        EditText etCustomPasswordName3 = findViewById(R.id.etCustomPasswordName3);
 
-        EditText etCustomPassword1 = (EditText) findViewById(R.id.etCustomPassword1);
-        EditText etCustomPassword2 = (EditText) findViewById(R.id.etCustomPassword2);
-        EditText etCustomPassword3 = (EditText) findViewById(R.id.etCustomPassword3);
+        EditText etCustomPassword1 = findViewById(R.id.etCustomPassword1);
+        EditText etCustomPassword2 = findViewById(R.id.etCustomPassword2);
+        EditText etCustomPassword3 = findViewById(R.id.etCustomPassword3);
 
         customPasswordNameEditText = new EditText[] {etCustomPasswordName1,
                                                      etCustomPasswordName2,
