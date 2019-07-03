@@ -1,14 +1,18 @@
-package us.brandonandrews.justencryptit;
+package us.brandonandrews.justencryptit.ui.settings;
 
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import android.widget.EditText;
 
+import us.brandonandrews.justencryptit.R;
 
+/**
+ * Change this to a PreferenceActivity
+ */
 public class SettingsActivity extends AppCompatActivity {
 
     public static final int CUSTOM_PASSWORD_MAX = 3;

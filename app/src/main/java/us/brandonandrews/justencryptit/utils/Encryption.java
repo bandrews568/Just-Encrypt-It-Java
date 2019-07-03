@@ -1,4 +1,4 @@
-package us.brandonandrews.justencryptit;
+package us.brandonandrews.justencryptit.utils;
 
 import org.jasypt.util.text.BasicTextEncryptor;
 
