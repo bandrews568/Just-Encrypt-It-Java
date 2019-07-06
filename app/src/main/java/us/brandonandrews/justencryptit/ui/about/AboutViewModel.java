@@ -11,11 +11,6 @@ public class AboutViewModel extends ViewModel {
         return Uri.parse(justEncryptItUrl);
     }
 
-    public Uri changeLogUri() {
-        String changeLogUrl = "";
-        return Uri.parse(changeLogUrl);
-    }
-
     public Uri authorUri() {
         String authorUrl = "https://github.com/bandrews568";
         return Uri.parse(authorUrl);

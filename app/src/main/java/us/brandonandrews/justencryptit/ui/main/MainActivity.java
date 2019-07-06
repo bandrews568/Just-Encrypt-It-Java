@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import us.brandonandrews.justencryptit.R;
-import us.brandonandrews.justencryptit.ui.about.AboutFragment;
+import us.brandonandrews.justencryptit.ui.about.AboutActivity;
 import us.brandonandrews.justencryptit.ui.encryptor.EncryptorFragment;
 import us.brandonandrews.justencryptit.ui.settings.SettingsActivity;
 
@@ -27,7 +27,6 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager()
                 .beginTransaction()
                 .add(R.id.main_content, new EncryptorFragment())
-                .addToBackStack(null)
                 .commit();
     }
 
@@ -44,11 +43,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(this, SettingsActivity.class));
                 return true;
             case R.id.action_about:
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .add(R.id.main_content, new AboutFragment())
-                        .addToBackStack(null)
-                        .commit();
+                startActivity(new Intent(this, AboutActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

@@ -1,27 +1,13 @@
 package us.brandonandrews.justencryptit.ui.encryptor;
 
-import androidx.lifecycle.ViewModelProviders;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.textfield.TextInputLayout;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
@@ -33,6 +19,16 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.lifecycle.ViewModelProviders;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.android.material.textfield.TextInputLayout;
 
 import org.jasypt.exceptions.EncryptionInitializationException;
 import org.jasypt.exceptions.EncryptionOperationNotPossibleException;
@@ -46,9 +42,6 @@ import butterknife.OnItemSelected;
 import butterknife.Unbinder;
 import us.brandonandrews.justencryptit.R;
 import us.brandonandrews.justencryptit.ui.ZoomDialog;
-import us.brandonandrews.justencryptit.ui.about.AboutFragment;
-import us.brandonandrews.justencryptit.ui.settings.SettingsActivity;
-import us.brandonandrews.justencryptit.utils.Encryption;
 
 import static us.brandonandrews.justencryptit.ui.settings.SettingsActivity.CUSTOM_PASSWORD_MAX;
 import static us.brandonandrews.justencryptit.ui.settings.SettingsActivity.customPassword;
