@@ -42,7 +42,7 @@
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="54dp"
+        android:layout_height="52dp"
         >
 
         <EditText
@@ -54,13 +54,12 @@
             android:layout_width="170dp"/>
 
         <EditText
+            android:id="@+id/etCustomPassword2"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:inputType="textPassword"
             android:ems="10"
-            android:id="@+id/etCustomPassword2"
-            android:layout_weight="1"
-            android:hint="Password"/>
+            android:hint="Password"
+            android:inputType="textPassword" />
     </LinearLayout>
 
     <LinearLayout
