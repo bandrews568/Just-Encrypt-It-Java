@@ -6,52 +6,55 @@
               android:weightSum="1">
 
     <TextView
-        android:text="Set custom passwords"
+        android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/tvCustomPassword"
-        android:layout_weight="0.04"
-        android:textAlignment="center"
-        android:textStyle="normal|bold"
-        android:textSize="18sp"/>
+        android:layout_marginStart="@dimen/spacing_large"
+        android:layout_marginLeft="@dimen/spacing_large"
+        android:layout_marginTop="@dimen/spacing_large"
+        android:layout_marginBottom="@dimen/spacing_middle"
+        android:text="Custom Passwords"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        android:textColor="@color/grey_90"
+        android:textStyle="bold" />
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        >
+        android:layout_height="52dp"
+        android:orientation="horizontal"
+        android:paddingLeft="16dp">
 
         <EditText
+            android:id="@+id/etCustomPasswordName1"
             android:layout_width="170dp"
             android:layout_height="match_parent"
-            android:inputType="textPersonName"
             android:ems="10"
-            android:id="@+id/etCustomPasswordName1"
-            android:hint="Password name"/>
+            android:hint="Password name"
+            android:inputType="textPersonName" />
 
         <EditText
+            android:id="@+id/etCustomPassword1"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:inputType="textPassword"
-            android:ems="10"
-            android:id="@+id/etCustomPassword1"
             android:layout_weight="1"
-            android:hint="Password"/>
+            android:ems="10"
+            android:hint="Password"
+            android:inputType="textPassword" />
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="52dp"
-        >
+        android:orientation="horizontal"
+        android:paddingLeft="16dp">
 
         <EditText
-            android:layout_height="match_parent"
-            android:inputType="textPersonName"
-            android:ems="10"
             android:id="@+id/etCustomPasswordName2"
+            android:layout_width="170dp"
+            android:layout_height="match_parent"
+            android:ems="10"
             android:hint="Password name"
-            android:layout_width="170dp"/>
+            android:inputType="textPersonName" />
 
         <EditText
             android:id="@+id/etCustomPassword2"
@@ -63,26 +66,26 @@
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="52dp"
-        >
+        android:orientation="horizontal"
+        android:paddingLeft="16dp">
 
         <EditText
-            android:layout_height="match_parent"
-            android:inputType="textPersonName"
-            android:ems="10"
             android:id="@+id/etCustomPasswordName3"
+            android:layout_width="170dp"
+            android:layout_height="match_parent"
+            android:ems="10"
             android:hint="Password name"
-            android:layout_width="170dp"/>
+            android:inputType="textPersonName" />
 
         <EditText
+            android:id="@+id/etCustomPassword3"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:inputType="textPassword"
             android:ems="10"
-            android:id="@+id/etCustomPassword3"
-            android:hint="Password"/>
+            android:hint="Password"
+            android:inputType="textPassword" />
     </LinearLayout>
 
 </LinearLayout>

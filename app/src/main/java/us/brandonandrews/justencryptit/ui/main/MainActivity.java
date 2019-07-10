@@ -24,10 +24,14 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        getSupportFragmentManager()
-                .beginTransaction()
-                .add(R.id.main_content, new EncryptorFragment())
-                .commit();
+        EncryptorFragment encryptorFragment = (EncryptorFragment) getSupportFragmentManager().findFragmentByTag("encryptor");
+
+        if (encryptorFragment == null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.main_content, new EncryptorFragment(), "encryptor")
+                    .commit();
+        }
     }
 
     @Override

@@ -69,7 +69,7 @@ public class AboutActivity extends AppCompatActivity {
         int currentYear = Calendar.getInstance().get(Calendar.YEAR);
         ((TextView) dialog.findViewById(R.id.tvLicense)).setText(getString(R.string.mit_license, currentYear));
 
-        dialog.findViewById(R.id.bt_close).setOnClickListener(v -> dialog.dismiss());
+        dialog.findViewById(R.id.btn_close).setOnClickListener(v -> dialog.dismiss());
 
         dialog.show();
         dialog.getWindow().setAttributes(lp);

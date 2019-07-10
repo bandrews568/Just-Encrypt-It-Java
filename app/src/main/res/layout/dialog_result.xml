@@ -10,32 +10,41 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingBottom="@dimen/spacing_middle"
         android:paddingLeft="@dimen/spacing_medium"
+        android:paddingTop="@dimen/spacing_middle"
         android:paddingRight="@dimen/spacing_medium"
-        android:paddingTop="@dimen/spacing_middle">
+        android:paddingBottom="@dimen/spacing_middle">
 
         <View
             android:layout_width="@dimen/spacing_large"
             android:layout_height="0dp" />
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="1"
-            android:orientation="vertical">
+            android:gravity="center|left"
+            android:text="Result"
+            android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+            android:textColor="@color/teal_500"
+            android:textStyle="bold"
+            app:fontFamily="serif" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="MIT License"
-                android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
-                android:textColor="@color/teal_500"
-                android:textStyle="bold"
-                app:fontFamily="serif" />
+        <ImageButton
+            android:id="@+id/btn_copy"
+            android:layout_width="?attr/actionBarSize"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:scaleType="center"
+            android:tint="#606060"
+            app:srcCompat="@drawable/content_copy" />
 
-        </LinearLayout>
+        <ImageButton
+            android:id="@+id/btn_share"
+            android:layout_width="?attr/actionBarSize"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            app:srcCompat="?attr/actionModeShareDrawable" />
 
         <ImageButton
             android:id="@+id/btn_close"
@@ -65,12 +74,11 @@
             android:padding="@dimen/spacing_mlarge">
 
             <TextView
-                android:id="@+id/tvLicense"
+                android:id="@+id/tvResultText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
                 android:lineSpacingExtra="@dimen/spacing_small"
-                android:text="@string/mit_license"
                 android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textColor="@color/grey_60"
                 app:fontFamily="serif" />
