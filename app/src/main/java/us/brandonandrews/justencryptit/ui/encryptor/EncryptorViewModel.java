@@ -6,10 +6,11 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import us.brandonandrews.justencryptit.utils.Encryption;
+import us.brandonandrews.justencryptit.utils.SingleLiveEvent;
 
 
 public class EncryptorViewModel extends ViewModel {
-    private MutableLiveData<EncryptionResult> encryptionLiveData = new MutableLiveData<>();
+    private SingleLiveEvent<EncryptionResult> encryptionLiveData = new SingleLiveEvent<>();
 
     public void encryptText(String text, String password) {
         new AsyncEncryption().execute(text, password, EncryptionType.ENCRYPT.toString());

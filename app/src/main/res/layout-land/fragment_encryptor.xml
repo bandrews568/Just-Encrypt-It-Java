@@ -54,8 +54,8 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
         android:background="@color/grey_3"
         android:ems="10"
         android:gravity="top"
@@ -67,8 +67,8 @@
         android:paddingEnd="10dp"
         android:paddingBottom="0dp"
         android:singleLine="false"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/linearLayout"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view" />
 
@@ -77,44 +77,42 @@
         style="@style/Widget.AppCompat.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="52dp"
+        android:layout_marginEnd="16dp"
         android:background="?attr/colorPrimary"
         android:fontFamily="sans-serif-medium"
         android:foreground="?attr/selectableItemBackground"
         android:text="Encrypt"
         android:textColor="@android:color/white"
         android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/btnDecrypt"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/btnDecrypt" />
+        app:layout_constraintTop_toTopOf="@+id/btnDecrypt" />
 
     <Button
         android:id="@+id/btnDecrypt"
         style="@style/Widget.AppCompat.Button"
         android:layout_width="88dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="52dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
         android:background="?attr/colorPrimary"
         android:foreground="?attr/selectableItemBackground"
         android:text="Decrypt"
         android:textColor="@android:color/white"
         android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btnEncrypt"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/tilPassword" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
-        android:layout_width="0dp"
-        android:layout_height="?attr/actionBarSize"
-        android:layout_marginBottom="16dp"
+        android:layout_width="?attr/actionBarSize"
+        android:layout_height="0dp"
+        android:layout_marginEnd="16dp"
         android:background="@color/grey_10"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/btnDecrypt"
-        app:layout_constraintEnd_toEndOf="@+id/etEnterText"
-        app:layout_constraintStart_toStartOf="@+id/etEnterText">
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="@+id/etEnterText"
+        app:layout_constraintEnd_toStartOf="@+id/btnDecrypt"
+        app:layout_constraintTop_toTopOf="@+id/etEnterText">
 
         <ImageButton
             android:id="@+id/btnPaste"
