@@ -8,6 +8,36 @@
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="us.brandonandrews.justencryptit.ui.main.MainActivity">
 
+    <Button
+        android:id="@+id/btnDecrypt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
+        android:layout_marginBottom="48dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="Decrypt"
+        android:theme="@style/Button.Primary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnEncrypt"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/btnEncrypt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="64dp"
+        android:layout_marginBottom="48dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="Encrypt"
+        android:theme="@style/Button.Primary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/btnDecrypt" />
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilPassword"
         android:layout_width="0dp"
@@ -72,44 +102,11 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view" />
 
-    <Button
-        android:id="@+id/btnEncrypt"
-        style="@style/Widget.AppCompat.Button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="52dp"
-        android:background="?attr/colorPrimary"
-        android:fontFamily="sans-serif-medium"
-        android:foreground="?attr/selectableItemBackground"
-        android:text="Encrypt"
-        android:textColor="@android:color/white"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/btnDecrypt" />
-
-    <Button
-        android:id="@+id/btnDecrypt"
-        style="@style/Widget.AppCompat.Button"
-        android:layout_width="88dp"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="52dp"
-        android:background="?attr/colorPrimary"
-        android:foreground="?attr/selectableItemBackground"
-        android:text="Decrypt"
-        android:textColor="@android:color/white"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btnEncrypt"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="8dp"
         android:background="@color/grey_10"
         android:orientation="horizontal"
         app:layout_constraintBottom_toTopOf="@+id/btnDecrypt"
