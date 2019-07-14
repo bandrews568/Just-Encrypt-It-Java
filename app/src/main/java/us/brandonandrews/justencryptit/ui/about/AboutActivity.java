@@ -1,8 +1,5 @@
 package us.brandonandrews.justencryptit.ui.about;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.lifecycle.ViewModelProviders;
-
 import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
@@ -11,6 +8,9 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProviders;
 
 import java.util.Calendar;
 
