@@ -1,4 +1,4 @@
-package us.brandonandrews.justencryptit.ui.about;
+package github.bandrews568.justencryptit.ui.about;
 
 import android.net.Uri;
 

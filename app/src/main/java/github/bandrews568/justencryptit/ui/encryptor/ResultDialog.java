@@ -1,4 +1,4 @@
-package us.brandonandrews.justencryptit.ui.encryptor;
+package github.bandrews568.justencryptit.ui.encryptor;
 
 
 import android.content.ClipData;
@@ -20,7 +20,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import us.brandonandrews.justencryptit.R;
+import github.bandrews568.justencryptit.R;
 
 public class ResultDialog extends DialogFragment {
 

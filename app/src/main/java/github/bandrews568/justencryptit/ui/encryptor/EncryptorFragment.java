@@ -1,10 +1,11 @@
-package us.brandonandrews.justencryptit.ui.encryptor;
+package github.bandrews568.justencryptit.ui.encryptor;
 
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,7 +35,7 @@ import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 import butterknife.Unbinder;
-import us.brandonandrews.justencryptit.R;
+import github.bandrews568.justencryptit.R;
 
 public class EncryptorFragment extends Fragment {
 
@@ -77,6 +78,7 @@ public class EncryptorFragment extends Fragment {
         viewModel = ViewModelProviders.of(this).get(EncryptorViewModel.class);
         viewModel.getEncryptionLiveData().observe(this, encryptionResult -> {
             if (encryptionResult.getError() != null) {
+                encryptionResult.getError().printStackTrace();
                 if (encryptionResult.getError() instanceof EncryptionInitializationException) {
                     tilPassword.setError("Invalid password");
                 } else if (encryptionResult.getError() instanceof EncryptionOperationNotPossibleException) {
@@ -121,6 +123,20 @@ public class EncryptorFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+
+        String encryptionType = PreferenceManager.getDefaultSharedPreferences(getActivity()).getString("algorithm_choice", "");
+
+        if (encryptionType.equals("AES")) {
+            tilPassword.setCounterEnabled(true);
+            tilPassword.setCounterMaxLength(16);
+        } else {
+            tilPassword.setCounterEnabled(false);
+        }
+    }
+
+    @Override
     public void onPause() {
         super.onPause();
 
@@ -153,7 +169,11 @@ public class EncryptorFragment extends Fragment {
 
         if (!TextUtils.isEmpty(text)) {
             tilPassword.setError(null);
-            viewModel.encryptText(text, password);
+            String algorithm = PreferenceManager
+                    .getDefaultSharedPreferences(getActivity())
+                    .getString("algorithm_choice", "Basic");
+
+            viewModel.encryptText(text, password, algorithm);
 
             if (keyboardManager != null) {
                 keyboardManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
@@ -168,7 +188,12 @@ public class EncryptorFragment extends Fragment {
 
         if (!TextUtils.isEmpty(text)) {
             tilPassword.setError(null);
-            viewModel.decryptText(text, password);
+
+            String algorithm = PreferenceManager
+                    .getDefaultSharedPreferences(getActivity())
+                    .getString("algorithm_choice", "Basic");
+
+            viewModel.decryptText(text, password, algorithm);
 
             if (keyboardManager != null) {
                 keyboardManager.hideSoftInputFromWindow(v.getWindowToken(), 0);
