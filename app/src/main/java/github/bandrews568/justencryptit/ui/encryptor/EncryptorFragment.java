@@ -3,6 +3,7 @@ package github.bandrews568.justencryptit.ui.encryptor;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -45,6 +46,8 @@ public class EncryptorFragment extends Fragment {
     @BindView(R.id.btnEncrypt) Button btnEncrypt;
     @BindView(R.id.btnDecrypt) Button btnDecrypt;
     @BindView(R.id.btnPaste) ImageButton btnPaste;
+    @BindView(R.id.btnCopy) ImageButton btnCopy;
+    @BindView(R.id.btnShare) ImageButton btnShare;
 
     @BindView(R.id.cbSavePassword) CheckBox cbSavePassword;
 
@@ -87,8 +90,14 @@ public class EncryptorFragment extends Fragment {
                     tilPassword.setError("Required");
                 }
             } else {
-                DialogFragment resultDialog = ResultDialog.newInstance(encryptionResult.getText());
-                resultDialog.show(getFragmentManager(), "result_dialog");
+                boolean showInDialog = PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("show_in_dialog", false);
+
+                if (showInDialog) {
+                    DialogFragment resultDialog = ResultDialog.newInstance(encryptionResult.getText());
+                    resultDialog.show(getFragmentManager(), "result_dialog");
+                } else {
+                    etEnterText.setText(encryptionResult.getText());
+                }
             }
         });
     }
@@ -134,6 +143,11 @@ public class EncryptorFragment extends Fragment {
         } else {
             tilPassword.setCounterEnabled(false);
         }
+
+        boolean showInDialog = PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("show_in_dialog", false);
+
+        btnCopy.setVisibility(showInDialog ? View.GONE : View.VISIBLE);
+        btnShare.setVisibility(showInDialog ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -236,6 +250,25 @@ public class EncryptorFragment extends Fragment {
                 .make(v, "Text cleared", Snackbar.LENGTH_LONG)
                 .setAction("UNDO", _v -> etEnterText.setText(tempEnterText));
         snackbar.show();
+    }
+
+    @OnClick(R.id.btnCopy)
+    public void copyClicked() {
+        ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+
+        if (clipboard != null) {
+            ClipData text = ClipData.newPlainText("text", etEnterText.getText());
+            clipboard.setPrimaryClip(text);
+        }
+    }
+
+    @OnClick(R.id.btnShare)
+    public void shareClicked() {
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, etEnterText.getText());
+        sendIntent.setType("text/plain");
+        startActivity(sendIntent);
     }
 
     @OnCheckedChanged(R.id.cbSavePassword)

@@ -32,6 +32,7 @@
 
         <SwitchPreferenceCompat
             app:key="show_in_dialog"
+            app:defaultValue="false"
             app:title="Show result in dialog" />
 
     </PreferenceCategory>
