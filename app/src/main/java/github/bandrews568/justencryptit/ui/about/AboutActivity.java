@@ -1,4 +1,4 @@
-package us.brandonandrews.justencryptit.ui.about;
+package github.bandrews568.justencryptit.ui.about;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -16,7 +16,7 @@ import java.util.Calendar;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import us.brandonandrews.justencryptit.R;
+import github.bandrews568.justencryptit.R;
 
 public class AboutActivity extends AppCompatActivity {
 

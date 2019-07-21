@@ -6,37 +6,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="us.brandonandrews.justencryptit.ui.main.MainActivity">
+    tools:context="github.bandrews568.justencryptit.ui.main.MainActivity">
 
     <Button
         android:id="@+id/btnDecrypt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="64dp"
-        android:layout_marginBottom="48dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
         android:layout_weight="1"
         android:gravity="center"
         android:text="Decrypt"
         android:theme="@style/Button.Primary"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btnEncrypt"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/view" />
 
     <Button
         android:id="@+id/btnEncrypt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="64dp"
-        android:layout_marginBottom="48dp"
+        android:layout_marginEnd="16dp"
         android:layout_weight="1"
         android:gravity="center"
         android:text="Encrypt"
         android:theme="@style/Button.Primary"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/btnDecrypt"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/btnDecrypt" />
+        app:layout_constraintTop_toTopOf="@+id/btnDecrypt" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilPassword"
@@ -54,7 +50,8 @@
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:inputType="textPassword" />
+            android:inputType="textPassword"
+            android:maxLength="150" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <CheckBox
@@ -84,13 +81,14 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:background="@color/grey_3"
         android:ems="10"
         android:gravity="top"
         android:hint="Enter text"
         android:inputType="textMultiLine"
+        android:maxLength="30000"
         android:paddingStart="10dp"
         android:paddingLeft="10dp"
         android:paddingTop="10dp"
@@ -100,16 +98,16 @@
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view" />
+        app:layout_constraintTop_toBottomOf="@+id/btnDecrypt" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="96dp"
         android:background="@color/grey_10"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/btnDecrypt"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/etEnterText"
         app:layout_constraintStart_toStartOf="@+id/etEnterText">
 
@@ -122,12 +120,34 @@
             app:srcCompat="@drawable/content_paste" />
 
         <ImageButton
+            android:id="@+id/btnCopy"
+            android:layout_width="?attr/actionBarSize"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:tint="#606060"
+            app:srcCompat="@drawable/content_copy"
+            tools:visibility="visible" />
+
+        <ImageButton
             android:id="@+id/btnClear"
             android:layout_width="?attr/actionBarSize"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:tint="#606060"
             app:srcCompat="@drawable/delete" />
+
+        <View
+            android:id="@+id/view2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/btnShare"
+            android:layout_width="?attr/actionBarSize"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="?attr/actionModeShareDrawable" />
 
     </LinearLayout>
 

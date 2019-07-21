@@ -1,4 +1,4 @@
-package us.brandonandrews.justencryptit.ui.encryptor;
+package github.bandrews568.justencryptit.ui.encryptor;
 
 import androidx.annotation.Nullable;
 

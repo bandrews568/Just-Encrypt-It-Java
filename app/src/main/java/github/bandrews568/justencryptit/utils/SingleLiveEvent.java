@@ -1,4 +1,4 @@
-package us.brandonandrews.justencryptit.utils;
+package github.bandrews568.justencryptit.utils;
 
 import android.util.Log;
 

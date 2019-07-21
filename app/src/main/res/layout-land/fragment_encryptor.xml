@@ -118,12 +118,34 @@
             app:srcCompat="@drawable/content_paste" />
 
         <ImageButton
+            android:id="@+id/btnCopy"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:tint="#606060"
+            app:srcCompat="@drawable/content_copy"
+            tools:visibility="visible" />
+
+        <ImageButton
             android:id="@+id/btnClear"
             android:layout_width="?attr/actionBarSize"
             android:layout_height="?attr/actionBarSize"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:tint="#606060"
             app:srcCompat="@drawable/delete" />
+
+        <View
+            android:id="@+id/view2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <ImageButton
+            android:id="@+id/btnShare"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="?attr/actionModeShareDrawable" />
 
     </LinearLayout>
 
