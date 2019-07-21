@@ -12,31 +12,27 @@
         android:id="@+id/btnDecrypt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="64dp"
-        android:layout_marginBottom="48dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
         android:layout_weight="1"
         android:gravity="center"
         android:text="Decrypt"
         android:theme="@style/Button.Primary"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btnEncrypt"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/view" />
 
     <Button
         android:id="@+id/btnEncrypt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="64dp"
-        android:layout_marginBottom="48dp"
+        android:layout_marginEnd="16dp"
         android:layout_weight="1"
         android:gravity="center"
         android:text="Encrypt"
         android:theme="@style/Button.Primary"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/btnDecrypt"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/btnDecrypt" />
+        app:layout_constraintTop_toTopOf="@+id/btnDecrypt" />
 
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/tilPassword"
@@ -85,7 +81,7 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
         android:background="@color/grey_3"
         android:ems="10"
@@ -102,16 +98,16 @@
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view" />
+        app:layout_constraintTop_toBottomOf="@+id/btnDecrypt" />
 
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="96dp"
         android:background="@color/grey_10"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/btnDecrypt"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/etEnterText"
         app:layout_constraintStart_toStartOf="@+id/etEnterText">
 

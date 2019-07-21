@@ -17,6 +17,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -30,6 +31,8 @@ import com.google.android.material.textfield.TextInputLayout;
 
 import org.jasypt.exceptions.EncryptionInitializationException;
 import org.jasypt.exceptions.EncryptionOperationNotPossibleException;
+
+import javax.crypto.BadPaddingException;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -84,10 +87,11 @@ public class EncryptorFragment extends Fragment {
                 encryptionResult.getError().printStackTrace();
                 if (encryptionResult.getError() instanceof EncryptionInitializationException) {
                     tilPassword.setError("Invalid password");
-                } else if (encryptionResult.getError() instanceof EncryptionOperationNotPossibleException) {
-                    etEnterText.setError("Can't decrypt text");
-                } else if (encryptionResult.getError() instanceof IllegalArgumentException) {
-                    tilPassword.setError("Required");
+                } else if (encryptionResult.getError() instanceof EncryptionOperationNotPossibleException
+                        || encryptionResult.getError() instanceof IllegalArgumentException) {
+                    showErrorToast("Can't decrypt text");
+                } else if (encryptionResult.getError() instanceof BadPaddingException) {
+                    tilPassword.setError("Invalid password");
                 }
             } else {
                 boolean showInDialog = PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("show_in_dialog", false);
@@ -96,6 +100,7 @@ public class EncryptorFragment extends Fragment {
                     DialogFragment resultDialog = ResultDialog.newInstance(encryptionResult.getText());
                     resultDialog.show(getFragmentManager(), "result_dialog");
                 } else {
+                    etEnterText.setError(null);
                     etEnterText.setText(encryptionResult.getText());
                 }
             }
@@ -181,11 +186,15 @@ public class EncryptorFragment extends Fragment {
         String password = tilPassword.getEditText().getText().toString();
         String text = etEnterText.getText().toString();
 
+        String algorithm = PreferenceManager
+                .getDefaultSharedPreferences(getActivity())
+                .getString("algorithm_choice", "Basic");
+
+        if (algorithm.equals("AES") && password.length() != 16) return;
+
         if (!TextUtils.isEmpty(text)) {
             tilPassword.setError(null);
-            String algorithm = PreferenceManager
-                    .getDefaultSharedPreferences(getActivity())
-                    .getString("algorithm_choice", "Basic");
+
 
             viewModel.encryptText(text, password, algorithm);
 
@@ -200,12 +209,14 @@ public class EncryptorFragment extends Fragment {
         String password = tilPassword.getEditText().getText().toString();
         String text = etEnterText.getText().toString();
 
+        String algorithm = PreferenceManager
+                .getDefaultSharedPreferences(getActivity())
+                .getString("algorithm_choice", "Basic");
+
+        if (algorithm.equals("AES") && password.length() != 16) return;
+
         if (!TextUtils.isEmpty(text)) {
             tilPassword.setError(null);
-
-            String algorithm = PreferenceManager
-                    .getDefaultSharedPreferences(getActivity())
-                    .getString("algorithm_choice", "Basic");
 
             viewModel.decryptText(text, password, algorithm);
 
@@ -229,8 +240,7 @@ public class EncryptorFragment extends Fragment {
                 if (text != null) {
                     if (text.length() > 30000) {
                         CharSequence truncatedText = text.subSequence(0, 30000);
-                        String toastMessage = String.format("Couldn't add %d characters", text.length() - 30000);
-                        Toast.makeText(getContext(), toastMessage, Toast.LENGTH_LONG).show();
+                        showErrorToast(String.format("Couldn't add %d characters", text.length() - 30000));
                         etEnterText.setText(truncatedText);
                     } else {
                         etEnterText.setText(text);
@@ -282,5 +292,16 @@ public class EncryptorFragment extends Fragment {
             editor.putBoolean("checked", false);
         }
         editor.commit();
+    }
+
+    private void showErrorToast(String message) {
+        Toast toast = new Toast(getActivity());
+        toast.setDuration(Toast.LENGTH_LONG);
+
+        View custom_view = getLayoutInflater().inflate(R.layout.toast_error, null);
+        ((TextView) custom_view.findViewById(R.id.tv_toast_message)).setText(message);
+
+        toast.setView(custom_view);
+        toast.show();
     }
 }
