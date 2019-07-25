@@ -2,19 +2,27 @@ package github.bandrews568.justencryptit.ui.main;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.ViewCompat;
+import androidx.fragment.app.Fragment;
+
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import github.bandrews568.justencryptit.ui.about.AboutActivity;
 import github.bandrews568.justencryptit.ui.encryptor.EncryptorFragment;
 import github.bandrews568.justencryptit.R;
+import github.bandrews568.justencryptit.ui.file.FileFragment;
 import github.bandrews568.justencryptit.ui.settings.SettingsActivity;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,14 +32,12 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        EncryptorFragment encryptorFragment = (EncryptorFragment) getSupportFragmentManager().findFragmentByTag("encryptor");
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.main_content, new FileFragment())
+                .commit();
 
-        if (encryptorFragment == null) {
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .replace(R.id.main_content, new EncryptorFragment(), "encryptor")
-                    .commit();
-        }
+        ((BottomNavigationView) findViewById(R.id.main_bottom_navigation)).setOnNavigationItemSelectedListener(this);
     }
 
     @Override
@@ -52,5 +58,28 @@ public class MainActivity extends AppCompatActivity {
         }
         
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        Fragment newFragment = null;
+
+        switch (menuItem.getItemId()) {
+            case R.id.nav_file:
+                newFragment = new FileFragment();
+                ViewCompat.setElevation(findViewById(R.id.main_app_bar_layout), 0);
+                break;
+            case R.id.nav_text:
+                newFragment = new EncryptorFragment();
+                ViewCompat.setElevation(findViewById(R.id.main_app_bar_layout), 10.5f);
+                break;
+        }
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.main_content, newFragment)
+                .commit();
+
+        return true;
     }
 }

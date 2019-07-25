@@ -38,8 +38,12 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.vectordrawable:vectordrawable:1.0.2'
     testImplementation 'junit:junit:4.12'
+
     // Butterknife
     // https://github.com/JakeWharton/butterknife
     implementation 'com.jakewharton:butterknife:10.1.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
+
+    // https://github.com/Angads25/android-filepicker
+    implementation 'com.github.angads25:filepicker:1.1.1'
 }
