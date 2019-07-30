@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,10 +23,12 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.google.android.material.bottomnavigation.BottomNavigationMenu;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -58,7 +61,7 @@ public class EncryptorFragment extends Fragment {
     private Unbinder unbinder;
 
     private EncryptorViewModel viewModel;
-
+    private Snackbar snackbar;
     private SharedPreferences sharedPreferences;
     private InputMethodManager keyboardManager;
 
@@ -170,6 +173,15 @@ public class EncryptorFragment extends Fragment {
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+
+        if (snackbar != null) {
+            snackbar.dismiss();
+        }
+    }
+
+    @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("password", tilPassword.getEditText().getText().toString());
@@ -180,6 +192,8 @@ public class EncryptorFragment extends Fragment {
         super.onDestroyView();
         unbinder.unbind();
     }
+
+
 
     @OnClick(R.id.btnEncrypt)
     public void encryptClicked(View v) {
@@ -256,9 +270,17 @@ public class EncryptorFragment extends Fragment {
 
         etEnterText.setText("");
 
-        Snackbar snackbar = Snackbar
+        snackbar = Snackbar
                 .make(v, "Text cleared", Snackbar.LENGTH_LONG)
                 .setAction("UNDO", _v -> etEnterText.setText(tempEnterText));
+
+        CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams)
+                snackbar.getView().getLayoutParams();
+        params.setAnchorId(R.id.main_bottom_navigation); //id of the bottom navigation view
+        params.gravity = Gravity.TOP;
+        params.anchorGravity = Gravity.TOP;
+        snackbar.getView().setLayoutParams(params);
+
         snackbar.show();
     }
 

@@ -1,8 +1,8 @@
-package github.bandrews568.justencryptit.ui.encryptor;
+package github.bandrews568.justencryptit.model;
 
 import androidx.annotation.Nullable;
 
-class EncryptionResult {
+public class EncryptionTextResult {
 
     private String text;
     @Nullable
