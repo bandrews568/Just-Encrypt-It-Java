@@ -60,6 +60,12 @@ public class PasswordDialog extends DialogFragment {
     }
 
     @Override
+    public void onDetach() {
+        super.onDetach();
+        passwordDialogListener = null;
+    }
+
+    @Override
     public void onDismiss(@NonNull DialogInterface dialog) {
         super.onDismiss(dialog);
 
@@ -93,7 +99,9 @@ public class PasswordDialog extends DialogFragment {
 
         if (validPassword) {
             if (passwordDialogListener != null) {
-                passwordDialogListener.onDialogSubmitClicked(passwordText);
+                String padPassword = String.format("%1$-" + 16 + "s", passwordText).replace(' ', '0');
+                passwordDialogListener.onDialogSubmitClicked(padPassword);
+                dismiss();
             }
         }
     }

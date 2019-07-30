@@ -1,4 +1,4 @@
-package github.bandrews568.justencryptit.ui.encryptor;
+package github.bandrews568.justencryptit.model;
 
 public enum EncryptionType {
     ENCRYPT,

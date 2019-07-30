@@ -1,16 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--<androidx.coordinatorlayout.widget.CoordinatorLayout-->
-    <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
-    <!--xmlns:tools="http://schemas.android.com/tools"-->
-    <!--android:fitsSystemWindows="true"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent">-->
-
-
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/grey_5">
@@ -22,14 +12,14 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="16dp"
         android:clickable="true"
-        android:tint="@color/textColorPrimary"
+        android:tint="#ffffff"
         app:backgroundTint="?attr/colorAccent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_file_document_outline" />
 
     <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabLayout"
+        android:id="@+id/tab_layout_file_fragment"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
@@ -39,7 +29,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:tabIndicatorColor="#ffffff"
         app:tabIndicatorHeight="3dp"
-        app:tabTextColor="@color/textColorPrimary">
+        app:tabMode="fixed"
+        app:tabTextColor="#ffffff">
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
@@ -54,7 +45,7 @@
     </com.google.android.material.tabs.TabLayout>
 
     <androidx.viewpager.widget.ViewPager
-        android:id="@+id/viewPager"
+        android:id="@+id/view_pager_file_fragment"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/grey_10"
@@ -62,10 +53,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tabLayout"
+        app:layout_constraintTop_toBottomOf="@+id/tab_layout_file_fragment"
         app:layout_constraintVertical_bias="0.0">
 
     </androidx.viewpager.widget.ViewPager>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-<!--</androidx.coordinatorlayout.widget.CoordinatorLayout>-->

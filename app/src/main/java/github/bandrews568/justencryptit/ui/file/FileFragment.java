@@ -1,39 +1,45 @@
 package github.bandrews568.justencryptit.ui.file;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.ViewCompat;
-import androidx.lifecycle.ViewModelProviders;
-
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.github.angads25.filepicker.controller.DialogSelectionListener;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentPagerAdapter;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
+
 import com.github.angads25.filepicker.model.DialogConfigs;
 import com.github.angads25.filepicker.model.DialogProperties;
 import com.github.angads25.filepicker.view.FilePickerDialog;
-import com.google.android.material.appbar.AppBarLayout;
+import com.google.android.material.tabs.TabLayout;
 
 import java.io.File;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import github.bandrews568.justencryptit.R;
+import github.bandrews568.justencryptit.utils.CryptoException;
+import github.bandrews568.justencryptit.utils.Encryption;
 
 public class FileFragment extends Fragment implements PasswordDialog.PasswordDialogListener {
 
     private static String TAG = FileFragment.class.getName();
+
+    @BindView(R.id.view_pager_file_fragment) ViewPager viewPager;
+    @BindView(R.id.tab_layout_file_fragment) TabLayout tabLayout;
 
     // Butterknife
     private Unbinder unbinder;
@@ -50,6 +56,15 @@ public class FileFragment extends Fragment implements PasswordDialog.PasswordDia
         View view = inflater.inflate(R.layout.file_fragment, container, false);
         unbinder = ButterKnife.bind(this, view);
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        PagerAdapter pagerAdapter = new FileTabsPagerAdapter(getChildFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        viewPager.setAdapter(pagerAdapter);
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     @Override
@@ -75,17 +90,13 @@ public class FileFragment extends Fragment implements PasswordDialog.PasswordDia
         if (requestCode == FilePickerDialog.EXTERNAL_READ_PERMISSION_GRANT) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 if (dialog != null) {
-                    //Show dialog if the read permission has been granted.
                     dialog.show();
                 }
             } else {
-                //Permission has not been granted. Notify the user.
-                Toast.makeText(getActivity(), "Permission is Required for getting list of files", Toast.LENGTH_SHORT).show();
+                showErrorToast("Permission is required for getting list of files");
             }
         }
     }
-
-
 
     private void showFilePickerDialog() {
         DialogProperties properties = new DialogProperties();
@@ -115,11 +126,68 @@ public class FileFragment extends Fragment implements PasswordDialog.PasswordDia
     @Override
     public void onDialogSubmitClicked(String password) {
         // Encrypt the file with the password
-        Log.d(TAG, "Password: " + password );
+        // TODO: put this on a background thread
+
+        File inputFile = new File(selectedFiles[0]);
+        File outputFile = new File(getContext().getFilesDir(), Encryption.getFileBaseName(inputFile.getName()) + ".jei");
+
+        try {
+            Encryption.encryptFile(password, inputFile, outputFile);
+            File[] files = getContext().getFilesDir().listFiles();
+            for (File file : files) {
+                Log.d(TAG, file.getPath());
+            }
+        } catch (CryptoException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onDialogCancel() {
         selectedFiles = null;
+    }
+
+    private void showErrorToast(String message) {
+        Toast toast = new Toast(getActivity());
+
+        View custom_view = getLayoutInflater().inflate(R.layout.toast_error, null);
+        ((TextView) custom_view.findViewById(R.id.tv_toast_message)).setText(message);
+
+        toast.setView(custom_view);
+        toast.setDuration(Toast.LENGTH_LONG);
+        toast.show();
+    }
+
+    private class FileTabsPagerAdapter extends FragmentPagerAdapter {
+
+
+        public FileTabsPagerAdapter(@NonNull FragmentManager fm, int behavior) {
+            super(fm, behavior);
+        }
+
+        @NonNull
+        @Override
+        public Fragment getItem(int position) {
+            if (position == 1) {
+                return new EncryptedFilesFragment();
+            } else {
+                return new EncryptedFilesFragment();
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return 2;
+        }
+
+        @Nullable
+        @Override
+        public CharSequence getPageTitle(int position) {
+            if (position == 0) {
+                return "Encrypted";
+            } else {
+                return "Decrypted";
+            }
+        }
     }
 }

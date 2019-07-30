@@ -19,4 +19,7 @@
     <color name="teal_100">#B2DFDB</color>
     <color name="teal_500">#009688</color>
 
+    <color name="red_300">#E57373</color>
+    <color name="red_400">#EF5350</color>
+
 </resources>
