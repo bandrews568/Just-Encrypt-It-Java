@@ -5,15 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-<androidx.recyclerview.widget.RecyclerView
-    android:id="@+id/recycler_view_encrypted_files"
-    android:name="github.bandrews568.justencryptit.ui.file.EncryptedFilesFragment"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
-    app:layoutManager="LinearLayoutManager"
-    tools:context=".ui.file.EncryptedFilesFragment"
-    tools:listitem="@layout/fragment_encrypted_files" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_encrypted_files"
+        android:name="github.bandrews568.justencryptit.ui.file.EncryptedFilesFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layoutManager="LinearLayoutManager"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:context=".ui.file.EncryptedFilesFragment"
+        tools:listitem="@layout/fragment_encrypted_files" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

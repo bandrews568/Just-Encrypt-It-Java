@@ -17,6 +17,8 @@
 package github.bandrews568.justencryptit.model;
 
 
+import androidx.annotation.NonNull;
+
 public class FileListItem {
     private String filename,location;
     private long time;
@@ -52,5 +54,16 @@ public class FileListItem {
 
     public void setSize(long size) {
         this.size = size;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "FileListItem{" +
+                "filename='" + filename + '\'' +
+                ", location='" + location + '\'' +
+                ", time=" + time +
+                ", size=" + size +
+                '}';
     }
 }

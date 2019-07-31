@@ -18,9 +18,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import github.bandrews568.justencryptit.ui.about.AboutActivity;
 import github.bandrews568.justencryptit.ui.encryptor.EncryptorFragment;
 import github.bandrews568.justencryptit.R;
-import github.bandrews568.justencryptit.ui.file.EncryptedFilesFragment;
 import github.bandrews568.justencryptit.ui.file.FileFragment;
-import github.bandrews568.justencryptit.ui.file.dummy.DummyContent;
 import github.bandrews568.justencryptit.ui.settings.SettingsActivity;
 
 
