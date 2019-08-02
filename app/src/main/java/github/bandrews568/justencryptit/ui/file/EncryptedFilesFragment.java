@@ -3,41 +3,44 @@ package github.bandrews568.justencryptit.ui.file;
 import android.content.Context;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import github.bandrews568.justencryptit.R;
 import github.bandrews568.justencryptit.model.FileListItem;
-import github.bandrews568.justencryptit.ui.file.dummy.DummyContent;
-import github.bandrews568.justencryptit.ui.file.dummy.DummyContent.DummyItem;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 public class EncryptedFilesFragment extends Fragment {
 
-    private List<FileListItem> files;
+    private static String TAG = FileFragment.class.getName();
+
+    private List<FileListItem> files = new ArrayList<>();
     private OnEncryptedFilesFragmentListener listener;
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
-    public EncryptedFilesFragment() {
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        populateFilesList();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_encrypted_files_list, container, false);
-        RecyclerView recyclerView = (RecyclerView) view;
-        recyclerView.setAdapter(new EncryptedFilesRecyclerViewAdapter(files, listener));
+        RecyclerView recyclerView = view.findViewById(R.id.recycler_view_encrypted_files);
+        recyclerView.setAdapter(new EncryptedFilesRecyclerViewAdapter(getContext(), files, listener));
         return view;
     }
 
@@ -45,6 +48,19 @@ public class EncryptedFilesFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         listener = null;
+    }
+
+    private void populateFilesList() {
+        File[] internalFiles = getContext().getFilesDir().listFiles();
+
+        for (File file : internalFiles) {
+            FileListItem fileListItem = new FileListItem();
+            fileListItem.setLocation(file.getPath());
+            fileListItem.setTime(file.lastModified());
+            fileListItem.setFilename(file.getName());
+            fileListItem.setSize(file.length());
+            files.add(fileListItem);
+        }
     }
 
     public interface OnEncryptedFilesFragmentListener {

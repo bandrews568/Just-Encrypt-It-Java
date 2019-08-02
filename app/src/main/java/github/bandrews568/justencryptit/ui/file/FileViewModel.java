@@ -44,4 +44,8 @@ public class FileViewModel extends ViewModel {
             encryptionLiveData.postValue(encryptionFileResult);
         }
     }
+
+    public SingleLiveEvent<EncryptionFileResult> getEncryptionLiveData() {
+        return encryptionLiveData;
+    }
 }
