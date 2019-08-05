@@ -284,9 +284,6 @@ public class FilePickerDialog extends Dialog implements AdapterView.OnItemClickL
                 fmark.performClick();
             }
         }
-        Log.d("DIALOG", titleStr);
-        Log.d("DIALOG", dname.getText().toString());
-        Log.d("DIALOG", dir_path.getText().toString());
     }
 
     public DialogProperties getProperties() {
@@ -420,7 +417,7 @@ public class FilePickerDialog extends Dialog implements AdapterView.OnItemClickL
     public void show() {
         if (!Utility.checkStorageAccessPermissions(context)) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                ((Activity) context).requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, EXTERNAL_READ_PERMISSION_GRANT);
+                ((Activity) context).requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, EXTERNAL_READ_PERMISSION_GRANT);
             }
         } else {
             super.show();
