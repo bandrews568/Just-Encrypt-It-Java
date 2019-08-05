@@ -1,6 +1,8 @@
 package github.bandrews568.justencryptit.utils;
 
 import android.util.Base64;
+import android.util.Log;
+import android.util.TimingLogger;
 
 import org.jasypt.util.text.BasicTextEncryptor;
 
@@ -87,12 +89,16 @@ public class Encryption {
         }
     }
 
-    public static String getFileBaseName(String fileName) {
-        int index = fileName.lastIndexOf('.');
-        if (index == -1) {
-            return fileName;
-        } else {
-            return fileName.substring(0, index);
+    public static String getFileExtension(String filename) {
+        int index = filename.lastIndexOf(".");
+        if (filename.lastIndexOf(".") == -1) {
+            return "";
         }
+        return filename.substring(index);
+    }
+
+    public static String getFileBaseName(String filename) {
+        int index = filename.lastIndexOf('.');
+        return index == -1 ? filename : filename.substring(0, index);
     }
 }

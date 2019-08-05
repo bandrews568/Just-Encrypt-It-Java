@@ -19,6 +19,8 @@ package github.bandrews568.justencryptit.model;
 
 import androidx.annotation.NonNull;
 
+
+
 public class FileListItem {
     private String filename,location;
     private long time;

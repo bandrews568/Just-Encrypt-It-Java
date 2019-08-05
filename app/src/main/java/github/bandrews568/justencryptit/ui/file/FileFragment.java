@@ -4,6 +4,8 @@ import android.Manifest;
 import android.app.Dialog;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.FileObserver;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,7 +38,6 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import github.bandrews568.justencryptit.R;
 import github.bandrews568.justencryptit.model.EncryptionFileResult;
-import github.bandrews568.justencryptit.utils.CryptoException;
 import github.bandrews568.justencryptit.utils.Encryption;
 
 public class FileFragment extends Fragment implements PasswordDialog.PasswordDialogListener {
@@ -120,7 +121,7 @@ public class FileFragment extends Fragment implements PasswordDialog.PasswordDia
             showPasswordDialog();
         });
 
-        requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, FilePickerDialog.EXTERNAL_READ_PERMISSION_GRANT);
+        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, FilePickerDialog.EXTERNAL_READ_PERMISSION_GRANT);
     }
 
     private void showPasswordDialog() {
@@ -132,8 +133,21 @@ public class FileFragment extends Fragment implements PasswordDialog.PasswordDia
     @Override
     public void onDialogSubmitClicked(String password) {
         // Encrypt the file with the password
+        // Save all files to /JustEncryptIt
+        // Create the directory if it doesn't exist
+        // Save the encrypted file in the /JustEncryptIt directory with the extension .jei
+
+        File directory = new File(Environment.getExternalStorageDirectory() + File.separator + "JustEncryptIt");
+
+        if (!directory.exists()) {
+            if (!directory.mkdirs()) {
+                showErrorToast("Error making /JustEncryptIt directory");
+                return;
+            }
+        }
+
         File inputFile = new File(selectedFiles[0]);
-        File outputFile = new File(getContext().getFilesDir(), Encryption.getFileBaseName(inputFile.getName()) + ".jei");
+        File outputFile = new File(directory, Encryption.getFileBaseName(inputFile.getName()) + ".jei");
 
         viewModel.encryptFile(password, inputFile, outputFile);
     }
@@ -186,10 +200,10 @@ public class FileFragment extends Fragment implements PasswordDialog.PasswordDia
         @NonNull
         @Override
         public Fragment getItem(int position) {
-            if (position == 1) {
+            if (position == 0) {
                 return new EncryptedFilesFragment();
             } else {
-                return new EncryptedFilesFragment();
+                return new DecryptedFilesFragment();
             }
         }
 

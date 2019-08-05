@@ -32,6 +32,8 @@ public class FileViewModel extends ViewModel {
                 Encryption.encryptFile(encryptFileWork.getPassword(),
                         encryptFileWork.getInputFile(),
                         encryptFileWork.getOutputFile());
+
+
             } catch (CryptoException e) {
                 encryptionFileResult.setError(e);
             }

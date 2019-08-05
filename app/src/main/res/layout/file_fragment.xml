@@ -30,7 +30,8 @@
         app:tabIndicatorColor="#ffffff"
         app:tabIndicatorHeight="3dp"
         app:tabMode="fixed"
-        app:tabTextColor="#ffffff">
+        app:tabSelectedTextColor="#ffffff"
+        app:tabTextColor="@color/grey_20">
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"

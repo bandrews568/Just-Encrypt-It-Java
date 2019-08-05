@@ -9,6 +9,7 @@ import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import butterknife.BindView;
@@ -23,12 +24,11 @@ public class EncryptedFilesRecyclerViewAdapter extends RecyclerView.Adapter<Encr
 
     private Context context;
     private final List<FileListItem> values;
-    private final EncryptedFilesFragment.OnEncryptedFilesFragmentListener listener;
+    private OnItemClickListener listener;
 
-    public EncryptedFilesRecyclerViewAdapter(Context context, List<FileListItem> items, EncryptedFilesFragment.OnEncryptedFilesFragmentListener listener) {
+    public EncryptedFilesRecyclerViewAdapter(Context context, List<FileListItem> items) {
         this.context = context;
         this.values = items;
-        this.listener = listener;
     }
 
     @NonNull
@@ -47,9 +47,9 @@ public class EncryptedFilesRecyclerViewAdapter extends RecyclerView.Adapter<Encr
         holder.tvName.setText(fileListItem.getFilename());
         holder.tvSize.setText(Formatter.formatFileSize(context, fileListItem.getSize()));
         holder.tvLastModified.setText("Last edited: " + DateFormat.format("MM/dd/yyyy hh:mm aa", fileListItem.getTime()));
-        holder.view.setOnClickListener(v -> {
+        holder.linearLayout.setOnClickListener(v -> {
             if (listener != null) {
-                listener.onListItemClick(holder.item);
+                listener.onItemClick(holder.item);
             }
         });
     }
@@ -66,11 +66,19 @@ public class EncryptedFilesRecyclerViewAdapter extends RecyclerView.Adapter<Encr
         @BindView(R.id.tv_encrypted_files_name) TextView tvName;
         @BindView(R.id.tv_encrypted_files_size) TextView tvSize;
         @BindView(R.id.tv_encrypted_files_last_modified) TextView tvLastModified;
+        @BindView(R.id.linear_layout_encrypted_files) LinearLayout linearLayout;
 
         public ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
-            this.view = view;
         }
+    }
+
+    public void setListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(FileListItem item);
     }
 }
