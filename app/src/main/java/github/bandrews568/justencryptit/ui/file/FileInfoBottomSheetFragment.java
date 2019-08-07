@@ -58,7 +58,10 @@ public class FileInfoBottomSheetFragment extends BottomSheetDialogFragment {
 
     @OnClick(R.id.ll_bottom_sheet_file_info_info)
     public void onInfoClicked() {
-        // Show info dialog
+        dismiss();
+        FileDetailsDialog fileDetailsDialog = new FileDetailsDialog();
+        fileDetailsDialog.setFileListItem(fileListItem);
+        fileDetailsDialog.show(getFragmentManager(), null);
     }
 
     public void setFileListItem(FileListItem fileListItem) {
