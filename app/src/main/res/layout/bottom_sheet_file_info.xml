@@ -9,8 +9,8 @@
         android:id="@+id/ll_bottom_sheet_file_info_decrypt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?selectableItemBackground"
         android:clickable="true"
-        android:foreground="?selectableItemBackground"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -37,8 +37,8 @@
         android:id="@+id/ll_bottom_sheet_file_info_edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?selectableItemBackground"
         android:clickable="true"
-        android:foreground="?selectableItemBackground"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -65,8 +65,8 @@
         android:id="@+id/ll_bottom_sheet_file_info_delete"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?selectableItemBackground"
         android:clickable="true"
-        android:foreground="?selectableItemBackground"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -93,8 +93,8 @@
         android:id="@+id/ll_bottom_sheet_file_info_share"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?selectableItemBackground"
         android:clickable="true"
-        android:foreground="?selectableItemBackground"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
@@ -122,7 +122,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clickable="true"
-        android:foreground="?selectableItemBackground"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 

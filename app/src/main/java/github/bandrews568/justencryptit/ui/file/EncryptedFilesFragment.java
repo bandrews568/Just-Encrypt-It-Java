@@ -67,7 +67,7 @@ public class EncryptedFilesFragment extends Fragment implements EncryptedFilesRe
                     @Override
                     public void onEvent(int event, @Nullable String path) {
                         Log.d(TAG, "Event: " + event + " Path: " + path);
-                        if (event == FileObserver.CLOSE_WRITE) {
+                        if (event == FileObserver.CLOSE_WRITE || event == FileObserver.DELETE) {
                             getActivity().runOnUiThread(() -> {
                                 if (recyclerView.getAdapter() != null) {
                                     populateFilesList();
