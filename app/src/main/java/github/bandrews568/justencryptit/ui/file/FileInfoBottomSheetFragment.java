@@ -16,6 +16,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
@@ -26,6 +27,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import github.bandrews568.justencryptit.R;
 import github.bandrews568.justencryptit.model.FileListItem;
+import github.bandrews568.justencryptit.utils.UiUtils;
 
 public class FileInfoBottomSheetFragment extends BottomSheetDialogFragment {
 
@@ -39,6 +41,14 @@ public class FileInfoBottomSheetFragment extends BottomSheetDialogFragment {
         View view = inflater.inflate(R.layout.bottom_sheet_file_info, container, false);
         unbinder = ButterKnife.bind(this, view);
         return view;
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d("Dialog Fragment TAG", "onStop: called");
+//        InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+//        inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
     }
 
     @Override
@@ -56,8 +66,8 @@ public class FileInfoBottomSheetFragment extends BottomSheetDialogFragment {
     public void onEditClicked() {
         // Show edit name dialog
         dismiss();
-
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
+        FragmentActivity activity = requireActivity();
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(requireContext());
 
         View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_rename_file, null, false);
 
@@ -66,18 +76,19 @@ public class FileInfoBottomSheetFragment extends BottomSheetDialogFragment {
         input.setFocusableInTouchMode(true);
         input.requestFocus();
 
-        InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
-
         alertDialog.setView(view);
         alertDialog.setPositiveButton("Rename", (dialog, which) -> {
-            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            String newFileName = input.getText().toString();
+            File file = new File(fileListItem.getLocation());
+            File newFile = new File(file.getParent(), newFileName);
+
+            if (!file.renameTo(newFile)) {
+                UiUtils.errorToast(activity, "Error renaming file");
+            }
+
             dialog.dismiss();
         });
-        alertDialog.setNegativeButton("Cancel", (dialog, which) -> {
-            inputMethodManager.hideSoftInputFromWindow(view.getWindowToken(), 0);
-            dialog.dismiss();
-        });
+        alertDialog.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
         alertDialog.show();
     }
 
