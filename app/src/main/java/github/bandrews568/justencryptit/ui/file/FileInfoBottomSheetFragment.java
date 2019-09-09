@@ -3,6 +3,7 @@ package github.bandrews568.justencryptit.ui.file;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.Html;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -97,11 +98,11 @@ public class FileInfoBottomSheetFragment extends BottomSheetDialogFragment {
         // Delete file
         dismiss();
 
-        String message = String.format("Are you sure you want to delete \"%s\"?", fileListItem.getFilename());
+        String message = String.format("Are you sure you want to delete \"<b>%s</b>\"?", fileListItem.getFilename());
 
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
         alertDialog.setTitle("Confirmation");
-        alertDialog.setMessage(message);
+        alertDialog.setMessage(Html.fromHtml(message));
         alertDialog.setPositiveButton("Delete", (dialog, which) -> {
             File file = new File(fileListItem.getLocation());
             if (!file.delete()) {
