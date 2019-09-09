@@ -56,7 +56,7 @@ public class EncryptedFilesFragment extends Fragment implements EncryptedFilesRe
     @Override
     public void onStart() {
         super.onStart();
-        Log.d(TAG, "onStart called");
+
         populateFilesList();
 
         File directory = new File(Environment.getExternalStorageDirectory() + File.separator + "JustEncryptIt");
@@ -66,8 +66,8 @@ public class EncryptedFilesFragment extends Fragment implements EncryptedFilesRe
                 fileObserver = new FileObserver(directory.getPath(), FileObserver.ALL_EVENTS) {
                     @Override
                     public void onEvent(int event, @Nullable String path) {
-                        Log.d(TAG, "Event: " + event + " Path: " + path);
-                        if (event == FileObserver.CLOSE_WRITE) {
+                        // Only refresh the file list after new, deleted and renamed file events
+                        if (event == FileObserver.CLOSE_WRITE || event == FileObserver.DELETE || event == FileObserver.MOVED_TO) {
                             getActivity().runOnUiThread(() -> {
                                 if (recyclerView.getAdapter() != null) {
                                     populateFilesList();

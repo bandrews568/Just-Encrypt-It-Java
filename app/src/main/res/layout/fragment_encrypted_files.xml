@@ -5,8 +5,8 @@
     android:id="@+id/linear_layout_encrypted_files"
     android:layout_width="match_parent"
     android:layout_height="88dp"
+    android:background="?selectableItemBackground"
     android:clickable="true"
-    android:foreground="?selectableItemBackground"
     android:orientation="vertical">
 
     <LinearLayout

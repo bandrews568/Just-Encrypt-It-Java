@@ -1,20 +1,33 @@
 package github.bandrews568.justencryptit.ui.file;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.text.InputType;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+
+import java.io.File;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import github.bandrews568.justencryptit.R;
 import github.bandrews568.justencryptit.model.FileListItem;
+import github.bandrews568.justencryptit.utils.UiUtils;
 
 public class FileInfoBottomSheetFragment extends BottomSheetDialogFragment {
 
@@ -31,6 +44,14 @@ public class FileInfoBottomSheetFragment extends BottomSheetDialogFragment {
     }
 
     @Override
+    public void onStop() {
+        super.onStop();
+        Log.d("Dialog Fragment TAG", "onStop: called");
+//        InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+//        inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
@@ -44,11 +65,51 @@ public class FileInfoBottomSheetFragment extends BottomSheetDialogFragment {
     @OnClick(R.id.ll_bottom_sheet_file_info_edit)
     public void onEditClicked() {
         // Show edit name dialog
+        dismiss();
+        FragmentActivity activity = requireActivity();
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(requireContext());
+
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.dialog_rename_file, null, false);
+
+        EditText input = view.findViewById(R.id.et_rename_file);
+        input.setText(fileListItem.getFilename());
+        input.setFocusableInTouchMode(true);
+        input.requestFocus();
+
+        alertDialog.setView(view);
+        alertDialog.setPositiveButton("Rename", (dialog, which) -> {
+            String newFileName = input.getText().toString();
+            File file = new File(fileListItem.getLocation());
+            File newFile = new File(file.getParent(), newFileName);
+
+            if (!file.renameTo(newFile)) {
+                UiUtils.errorToast(activity, "Error renaming file");
+            }
+
+            dialog.dismiss();
+        });
+        alertDialog.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+        alertDialog.show();
     }
 
     @OnClick(R.id.ll_bottom_sheet_file_info_delete)
     public void onDeleteClicked() {
         // Delete file
+        dismiss();
+
+        String message = String.format("Are you sure you want to delete \"%s\"?", fileListItem.getFilename());
+
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
+        alertDialog.setTitle("Confirmation");
+        alertDialog.setMessage(message);
+        alertDialog.setPositiveButton("Delete", (dialog, which) -> {
+            File file = new File(fileListItem.getLocation());
+            if (!file.delete()) {
+                showErrorToast("Error deleting file");
+            }
+        });
+        alertDialog.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+        alertDialog.show();
     }
 
     @OnClick(R.id.ll_bottom_sheet_file_info_share)
@@ -62,6 +123,17 @@ public class FileInfoBottomSheetFragment extends BottomSheetDialogFragment {
         FileDetailsDialog fileDetailsDialog = new FileDetailsDialog();
         fileDetailsDialog.setFileListItem(fileListItem);
         fileDetailsDialog.show(getFragmentManager(), null);
+    }
+
+    private void showErrorToast(String message) {
+        Toast toast = new Toast(getActivity());
+
+        View custom_view = getLayoutInflater().inflate(R.layout.toast_error, null);
+        ((TextView) custom_view.findViewById(R.id.tv_toast_message)).setText(message);
+
+        toast.setView(custom_view);
+        toast.setDuration(Toast.LENGTH_LONG);
+        toast.show();
     }
 
     public void setFileListItem(FileListItem fileListItem) {
