@@ -147,7 +147,7 @@ public class FileFragment extends Fragment implements PasswordDialog.PasswordDia
         }
 
         File inputFile = new File(selectedFiles[0]);
-        File outputFile = new File(directory, Encryption.getFileBaseName(inputFile.getName()) + ".jei");
+        File outputFile = new File(directory, inputFile.getName() + ".jei");
 
         viewModel.encryptFile(password, inputFile, outputFile);
     }
