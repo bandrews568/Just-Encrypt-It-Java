@@ -45,14 +45,6 @@ public class FileInfoBottomSheetFragment extends BottomSheetDialogFragment {
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
-        Log.d("Dialog Fragment TAG", "onStop: called");
-//        InputMethodManager inputMethodManager = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-//        inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
-    }
-
-    @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
