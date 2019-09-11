@@ -1,18 +1,12 @@
 package github.bandrews568.justencryptit.ui.file;
 
-import android.content.Context;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.Html;
-import android.text.InputType;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -23,6 +17,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.io.File;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
@@ -32,15 +27,35 @@ import github.bandrews568.justencryptit.utils.UiUtils;
 
 public class FileInfoBottomSheetFragment extends BottomSheetDialogFragment {
 
+    @BindView(R.id.tv_bottom_dialog_file_info_type) TextView tvType;
+
     private Unbinder unbinder;
 
     private FileListItem fileListItem;
+
+    public static FileInfoBottomSheetFragment newInstance(String type) {
+        FileInfoBottomSheetFragment fileInfoBottomSheetFragment = new FileInfoBottomSheetFragment();
+
+        Bundle args = new Bundle();
+        args.putString("type", type);
+        fileInfoBottomSheetFragment.setArguments(args);
+
+        return fileInfoBottomSheetFragment;
+    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.bottom_sheet_file_info, container, false);
         unbinder = ButterKnife.bind(this, view);
+
+        if (getArguments() != null) {
+            String type = getArguments().getString("type");
+
+            if (type != null) {
+                tvType.setText(type.equals("encrypt") ? "Decrypt" : "Encrypt");
+            }
+        }
         return view;
     }
 
@@ -51,8 +66,20 @@ public class FileInfoBottomSheetFragment extends BottomSheetDialogFragment {
     }
 
     @OnClick(R.id.ll_bottom_sheet_file_info_decrypt)
-    public void onDecryptClicked() {
+    public void onEncryptionActionClicked() {
         // Show password dialog
+        if (getArguments() != null) {
+            String type = getArguments().getString("type");
+
+            if (type != null) {
+                switch (type) {
+                    case "encrypt":
+                        break;
+                    case "decrypt":
+                        break;
+                }
+            }
+        }
     }
 
     @OnClick(R.id.ll_bottom_sheet_file_info_edit)
@@ -98,7 +125,7 @@ public class FileInfoBottomSheetFragment extends BottomSheetDialogFragment {
         alertDialog.setPositiveButton("Delete", (dialog, which) -> {
             File file = new File(fileListItem.getLocation());
             if (!file.delete()) {
-                showErrorToast("Error deleting file");
+                UiUtils.errorToast(getActivity(), "Error deleting file");
             }
         });
         alertDialog.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
@@ -116,17 +143,6 @@ public class FileInfoBottomSheetFragment extends BottomSheetDialogFragment {
         FileDetailsDialog fileDetailsDialog = new FileDetailsDialog();
         fileDetailsDialog.setFileListItem(fileListItem);
         fileDetailsDialog.show(getFragmentManager(), null);
-    }
-
-    private void showErrorToast(String message) {
-        Toast toast = new Toast(getActivity());
-
-        View custom_view = getLayoutInflater().inflate(R.layout.toast_error, null);
-        ((TextView) custom_view.findViewById(R.id.tv_toast_message)).setText(message);
-
-        toast.setView(custom_view);
-        toast.setDuration(Toast.LENGTH_LONG);
-        toast.show();
     }
 
     public void setFileListItem(FileListItem fileListItem) {

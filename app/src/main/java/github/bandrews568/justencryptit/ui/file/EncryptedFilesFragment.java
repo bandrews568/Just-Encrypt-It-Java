@@ -25,9 +25,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EncryptedFilesFragment extends Fragment implements EncryptedFilesRecyclerViewAdapter.OnItemClickListener {
-
-    private static String TAG = EncryptedFilesFragment.class.getName();
+public class EncryptedFilesFragment extends Fragment implements OnListItemClickListener {
 
     @BindView(R.id.recycler_view_encrypted_files) RecyclerView recyclerView;
 
@@ -35,12 +33,6 @@ public class EncryptedFilesFragment extends Fragment implements EncryptedFilesRe
     private FileObserver fileObserver;
     private List<FileListItem> files = new ArrayList<>();
     private EncryptedFilesRecyclerViewAdapter encryptedFilesRecyclerViewAdapter;
-
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -100,10 +92,9 @@ public class EncryptedFilesFragment extends Fragment implements EncryptedFilesRe
     @Override
     public void onItemClick(FileListItem item) {
         // Show bottom sheet
-        Log.d(TAG, item.toString());
-        FileInfoBottomSheetFragment fileInfoBottomSheetFragment = new FileInfoBottomSheetFragment();
+        FileInfoBottomSheetFragment fileInfoBottomSheetFragment = FileInfoBottomSheetFragment.newInstance("encrypt");
         fileInfoBottomSheetFragment.setFileListItem(item);
-        fileInfoBottomSheetFragment.show(getFragmentManager(), null);
+        fileInfoBottomSheetFragment.show(requireFragmentManager(), null);
     }
 
     private void populateFilesList() {
@@ -114,12 +105,15 @@ public class EncryptedFilesFragment extends Fragment implements EncryptedFilesRe
         if (!directory.exists() || directory.listFiles() == null) return;
 
         for (File file : directory.listFiles()) {
-            FileListItem fileListItem = new FileListItem();
-            fileListItem.setLocation(file.getPath());
-            fileListItem.setTime(file.lastModified());
-            fileListItem.setFilename(file.getName());
-            fileListItem.setSize(file.length());
-            files.add(fileListItem);
+            // Need to check the file extensions to include only .jei files
+            if (file.getName().endsWith(".jei")) {
+                FileListItem fileListItem = new FileListItem();
+                fileListItem.setLocation(file.getPath());
+                fileListItem.setTime(file.lastModified());
+                fileListItem.setFilename(file.getName());
+                fileListItem.setSize(file.length());
+                files.add(fileListItem);
+            }
         }
 
         encryptedFilesRecyclerViewAdapter.notifyDataSetChanged();
