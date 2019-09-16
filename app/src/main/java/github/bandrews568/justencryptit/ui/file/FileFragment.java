@@ -82,9 +82,23 @@ public class FileFragment extends Fragment implements PasswordDialog.PasswordDia
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+
+        viewModel.getFileObserver().startWatching();
+    }
+
+    @Override
     public void onDestroyView() {
         super.onDestroyView();
         unbinder.unbind();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        viewModel.getFileObserver().stopWatching();
     }
 
     @OnClick(R.id.fab_file_choose)
@@ -191,7 +205,6 @@ public class FileFragment extends Fragment implements PasswordDialog.PasswordDia
     }
 
     private class FileTabsPagerAdapter extends FragmentPagerAdapter {
-
 
         public FileTabsPagerAdapter(@NonNull FragmentManager fm, int behavior) {
             super(fm, behavior);

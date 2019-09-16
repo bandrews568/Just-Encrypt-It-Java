@@ -3,6 +3,7 @@ package github.bandrews568.justencryptit.model;
 
 import androidx.annotation.NonNull;
 
+import java.util.Objects;
 
 
 public class FileListItem {

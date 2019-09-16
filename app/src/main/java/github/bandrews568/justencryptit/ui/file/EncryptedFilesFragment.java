@@ -54,16 +54,13 @@ public class EncryptedFilesFragment extends Fragment implements OnListItemClickL
         populateFilesList();
 
         File directory = new File(Environment.getExternalStorageDirectory() + File.separator + "JustEncryptIt");
-        System.out.println(directory.exists());
-        System.out.println(directory.getPath());
-        System.out.println(directory.getAbsolutePath());
+
         if (directory.exists()) {
             if (fileObserver == null) {
                 fileObserver = new FileObserver(directory.getPath(), FileObserver.ALL_EVENTS) {
                     @Override
                     public void onEvent(int event, @Nullable String path) {
                         // Only refresh the file list after new, deleted and renamed file events
-                        System.out.println("Event: " + event + "\nPath: " + path);
                         if (event == FileObserver.CLOSE_WRITE || event == FileObserver.DELETE || event == FileObserver.MOVED_TO) {
                             getActivity().runOnUiThread(() -> {
                                 if (recyclerView.getAdapter() != null) {
