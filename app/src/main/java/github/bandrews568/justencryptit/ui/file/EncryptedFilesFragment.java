@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -28,6 +29,7 @@ import java.util.List;
 public class EncryptedFilesFragment extends Fragment implements OnListItemClickListener {
 
     @BindView(R.id.recycler_view_encrypted_files) RecyclerView recyclerView;
+    @BindView(R.id.view_empty_files_encrypted_files) LinearLayout linearLayoutEmptyFiles;
 
     private Unbinder unbinder;
     private FileObserver fileObserver;
@@ -52,13 +54,16 @@ public class EncryptedFilesFragment extends Fragment implements OnListItemClickL
         populateFilesList();
 
         File directory = new File(Environment.getExternalStorageDirectory() + File.separator + "JustEncryptIt");
-
+        System.out.println(directory.exists());
+        System.out.println(directory.getPath());
+        System.out.println(directory.getAbsolutePath());
         if (directory.exists()) {
             if (fileObserver == null) {
                 fileObserver = new FileObserver(directory.getPath(), FileObserver.ALL_EVENTS) {
                     @Override
                     public void onEvent(int event, @Nullable String path) {
                         // Only refresh the file list after new, deleted and renamed file events
+                        System.out.println("Event: " + event + "\nPath: " + path);
                         if (event == FileObserver.CLOSE_WRITE || event == FileObserver.DELETE || event == FileObserver.MOVED_TO) {
                             getActivity().runOnUiThread(() -> {
                                 if (recyclerView.getAdapter() != null) {
@@ -115,6 +120,8 @@ public class EncryptedFilesFragment extends Fragment implements OnListItemClickL
                 files.add(fileListItem);
             }
         }
+
+        linearLayoutEmptyFiles.setVisibility(files.isEmpty() ? View.VISIBLE : View.INVISIBLE);
 
         encryptedFilesRecyclerViewAdapter.notifyDataSetChanged();
     }

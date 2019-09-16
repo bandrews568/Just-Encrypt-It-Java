@@ -34,7 +34,7 @@ public class DecryptedFilesRecyclerViewAdapter extends RecyclerView.Adapter<Decr
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.fragment_encrypted_files, parent, false);
+                .inflate(R.layout.fragment_decrypted_files, parent, false);
         return new DecryptedFilesRecyclerViewAdapter.ViewHolder(view);
     }
 
@@ -65,8 +65,7 @@ public class DecryptedFilesRecyclerViewAdapter extends RecyclerView.Adapter<Decr
         @BindView(R.id.tv_decrypted_files_name) TextView tvName;
         @BindView(R.id.tv_decrypted_files_size) TextView tvSize;
         @BindView(R.id.tv_decrypted_files_last_modified) TextView tvLastModified;
-        @BindView(R.id.linear_layout_decrypted_files)
-        LinearLayout linearLayout;
+        @BindView(R.id.linear_layout_decrypted_files) LinearLayout linearLayout;
 
         public ViewHolder(View view) {
             super(view);
