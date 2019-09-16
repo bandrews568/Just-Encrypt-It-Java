@@ -40,7 +40,7 @@ public class DecryptedFilesFragment extends Fragment implements OnListItemClickL
         decryptedFilesRecyclerViewAdapter = new DecryptedFilesRecyclerViewAdapter(requireContext(), files);
         decryptedFilesRecyclerViewAdapter.setListener(this);
         recyclerView.setAdapter(decryptedFilesRecyclerViewAdapter);
-        return inflater.inflate(R.layout.fragment_decrypted_files, container, false);
+        return view;
     }
 
     @Override

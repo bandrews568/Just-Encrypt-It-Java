@@ -18,4 +18,14 @@
         tools:context=".ui.file.EncryptedFilesFragment"
         tools:listitem="@layout/fragment_encrypted_files" />
 
+    <include
+        android:id="@+id/view_empty_files_encrypted_files"
+        layout="@layout/view_empty_file_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/recycler_view_encrypted_files"
+        app:layout_constraintStart_toStartOf="@+id/recycler_view_encrypted_files"
+        app:layout_constraintTop_toTopOf="@+id/recycler_view_encrypted_files" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
