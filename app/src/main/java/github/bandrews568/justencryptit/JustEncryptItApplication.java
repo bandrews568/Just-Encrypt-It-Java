@@ -1,4 +1,4 @@
-package github.bandrews568.justencryptit.ui;
+package github.bandrews568.justencryptit;
 
 import android.app.Application;
 import android.os.Environment;

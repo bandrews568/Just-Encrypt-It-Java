@@ -5,7 +5,9 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.collection.ArraySet;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Environment;
@@ -25,6 +27,7 @@ import github.bandrews568.justencryptit.model.FileListItem;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class EncryptedFilesFragment extends Fragment implements OnListItemClickListener {
 
@@ -32,8 +35,9 @@ public class EncryptedFilesFragment extends Fragment implements OnListItemClickL
     @BindView(R.id.view_empty_files_encrypted_files) LinearLayout linearLayoutEmptyFiles;
 
     private Unbinder unbinder;
+    private FileViewModel viewModel;
     private FileObserver fileObserver;
-    private List<FileListItem> files = new ArrayList<>();
+    private Set<FileListItem> files = new ArraySet<>();
     private EncryptedFilesRecyclerViewAdapter encryptedFilesRecyclerViewAdapter;
 
     @Override
@@ -48,41 +52,40 @@ public class EncryptedFilesFragment extends Fragment implements OnListItemClickL
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
-        populateFilesList();
-
-        File directory = new File(Environment.getExternalStorageDirectory() + File.separator + "JustEncryptIt");
-
-        if (directory.exists()) {
-            if (fileObserver == null) {
-                fileObserver = new FileObserver(directory.getPath(), FileObserver.ALL_EVENTS) {
-                    @Override
-                    public void onEvent(int event, @Nullable String path) {
-                        // Only refresh the file list after new, deleted and renamed file events
-                        if (event == FileObserver.CLOSE_WRITE || event == FileObserver.DELETE || event == FileObserver.MOVED_TO) {
-                            getActivity().runOnUiThread(() -> {
-                                if (recyclerView.getAdapter() != null) {
-                                    populateFilesList();
-                                }
-                            });
-                        }
-                    }
-                };
-            }
-
-            fileObserver.startWatching();
-        }
+        viewModel = ViewModelProviders.of(requireActivity()).get(FileViewModel.class);
+        viewModel.getEncryptedFilesLiveData().observe(this, this::handleEncryptedSetResult);
     }
 
     @Override
-    public void onStop() {
-        super.onStop();
+    public void onStart() {
+        super.onStart();
 
-        if (fileObserver != null) {
-            fileObserver.stopWatching();
-        }
+//        populateFilesList();
+//
+//        File directory = new File(Environment.getExternalStorageDirectory() + File.separator + "JustEncryptIt");
+//
+//        if (directory.exists()) {
+//            if (fileObserver == null) {
+//                fileObserver = new FileObserver(directory.getPath(), FileObserver.ALL_EVENTS) {
+//                    @Override
+//                    public void onEvent(int event, @Nullable String path) {
+//                        // Only refresh the file list after new, deleted and renamed file events
+//                        if (event == FileObserver.CLOSE_WRITE || event == FileObserver.DELETE || event == FileObserver.MOVED_TO) {
+//                            getActivity().runOnUiThread(() -> {
+//                                if (recyclerView.getAdapter() != null) {
+//                                    populateFilesList();
+//                                }
+//                            });
+//                        }
+//                    }
+//                };
+//            }
+//
+//            fileObserver.startWatching();
+//        }
     }
 
     @Override
@@ -99,27 +102,31 @@ public class EncryptedFilesFragment extends Fragment implements OnListItemClickL
         fileInfoBottomSheetFragment.show(requireFragmentManager(), null);
     }
 
-    private void populateFilesList() {
-        File directory = new File(Environment.getExternalStorageDirectory() + File.separator + "JustEncryptIt");
+    private void handleEncryptedSetResult(Set<FileListItem> encryptedFileSet) {
 
-        files.clear();
-
-        if (!directory.exists() || directory.listFiles() == null) return;
-
-        for (File file : directory.listFiles()) {
-            // Need to check the file extensions to include only .jei files
-            if (file.getName().endsWith(".jei")) {
-                FileListItem fileListItem = new FileListItem();
-                fileListItem.setLocation(file.getPath());
-                fileListItem.setTime(file.lastModified());
-                fileListItem.setFilename(file.getName());
-                fileListItem.setSize(file.length());
-                files.add(fileListItem);
-            }
-        }
-
-        linearLayoutEmptyFiles.setVisibility(files.isEmpty() ? View.VISIBLE : View.INVISIBLE);
-
-        encryptedFilesRecyclerViewAdapter.notifyDataSetChanged();
     }
+
+//    private void populateFilesList() {
+//        File directory = new File(Environment.getExternalStorageDirectory() + File.separator + "JustEncryptIt");
+//
+//        files.clear();
+//
+//        if (!directory.exists() || directory.listFiles() == null) return;
+//
+//        for (File file : directory.listFiles()) {
+//            // Need to check the file extensions to include only .jei files
+//            if (file.getName().endsWith(".jei")) {
+//                FileListItem fileListItem = new FileListItem();
+//                fileListItem.setLocation(file.getPath());
+//                fileListItem.setTime(file.lastModified());
+//                fileListItem.setFilename(file.getName());
+//                fileListItem.setSize(file.length());
+//                files.add(fileListItem);
+//            }
+//        }
+//
+//        linearLayoutEmptyFiles.setVisibility(files.isEmpty() ? View.VISIBLE : View.INVISIBLE);
+//
+//        encryptedFilesRecyclerViewAdapter.notifyDataSetChanged();
+//    }
 }

@@ -49,11 +49,8 @@ public class FileFragment extends Fragment implements PasswordDialog.PasswordDia
 
     // Butterknife
     private Unbinder unbinder;
-
     private FileViewModel viewModel;
-
     private FilePickerDialog dialog;
-
     private String[] selectedFiles;
 
     @Override
@@ -77,7 +74,7 @@ public class FileFragment extends Fragment implements PasswordDialog.PasswordDia
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        viewModel = ViewModelProviders.of(this).get(FileViewModel.class);
+        viewModel = ViewModelProviders.of(requireActivity()).get(FileViewModel.class);
         viewModel.getEncryptionLiveData().observe(this, this::handleEncryptionFileResult);
     }
 
