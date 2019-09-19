@@ -31,7 +31,13 @@ public class FileViewModel extends ViewModel {
 
     private File directory = new File(Environment.getExternalStorageDirectory() + File.separator + "JustEncryptIt");
 
-    private int fileEvents = (FileObserver.CREATE | FileObserver.DELETE | FileObserver.MOVED_TO);
+    private int fileEvents = (FileObserver.CREATE |
+                              FileObserver.DELETE |
+                              FileObserver.DELETE_SELF |
+                              FileObserver.MODIFY |
+                              FileObserver.MOVED_FROM |
+                              FileObserver.MOVED_TO |
+                              FileObserver.MOVE_SELF);
 
     private FileObserver fileObserver = new FileObserver(directory.getPath(), fileEvents) {
         @Override

@@ -43,6 +43,29 @@ public class FileListItem {
         this.size = size;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        FileListItem that = (FileListItem) o;
+
+        if (time != that.time) return false;
+        if (size != that.size) return false;
+        if (filename != null ? !filename.equals(that.filename) : that.filename != null)
+            return false;
+        return location != null ? location.equals(that.location) : that.location == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = filename != null ? filename.hashCode() : 0;
+        result = 31 * result + (location != null ? location.hashCode() : 0);
+        result = 31 * result + (int) (time ^ (time >>> 32));
+        result = 31 * result + (int) (size ^ (size >>> 32));
+        return result;
+    }
+
     @NonNull
     @Override
     public String toString() {
