@@ -38,7 +38,7 @@ import butterknife.OnClick;
 import butterknife.Unbinder;
 import github.bandrews568.justencryptit.R;
 import github.bandrews568.justencryptit.model.EncryptionFileResult;
-import github.bandrews568.justencryptit.utils.Encryption;
+import github.bandrews568.justencryptit.utils.UiUtils;
 
 public class FileFragment extends Fragment implements PasswordDialog.PasswordDialogListener {
 
@@ -81,7 +81,6 @@ public class FileFragment extends Fragment implements PasswordDialog.PasswordDia
     @Override
     public void onStart() {
         super.onStart();
-
         viewModel.getFileObserver().startWatching();
     }
 
@@ -94,7 +93,6 @@ public class FileFragment extends Fragment implements PasswordDialog.PasswordDia
     @Override
     public void onStop() {
         super.onStop();
-
         viewModel.getFileObserver().stopWatching();
     }
 
@@ -111,7 +109,7 @@ public class FileFragment extends Fragment implements PasswordDialog.PasswordDia
                     dialog.show();
                 }
             } else {
-                showErrorToast("Permission is required for getting list of files");
+                UiUtils.errorToast(getContext(), "Permission is required for getting list of files");
             }
         }
     }
@@ -152,7 +150,7 @@ public class FileFragment extends Fragment implements PasswordDialog.PasswordDia
 
         if (!directory.exists()) {
             if (!directory.mkdirs()) {
-                showErrorToast("Error making /JustEncryptIt directory");
+                UiUtils.errorToast(getContext(), "Error making /JustEncryptIt directory");
                 return;
             }
         }
@@ -168,36 +166,9 @@ public class FileFragment extends Fragment implements PasswordDialog.PasswordDia
         selectedFiles = null;
     }
 
-    private void showErrorToast(String message) {
-        Toast toast = new Toast(getActivity());
-
-        View custom_view = getLayoutInflater().inflate(R.layout.toast_error, null);
-        ((TextView) custom_view.findViewById(R.id.tv_toast_message)).setText(message);
-
-        toast.setView(custom_view);
-        toast.setDuration(Toast.LENGTH_LONG);
-        toast.show();
-    }
-
-    private void showErrorDialog() {
-        Dialog dialog = new Dialog(getContext());
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.dialog_error);
-        dialog.setCancelable(true);
-
-        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-        lp.copyFrom(dialog.getWindow().getAttributes());
-        lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
-        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-
-        dialog.findViewById(R.id.btn_dialog_error_close).setOnClickListener(v -> dialog.dismiss());
-        dialog.show();
-        dialog.getWindow().setAttributes(lp);
-    }
-
     private void handleEncryptionFileResult(EncryptionFileResult encryptionFileResult) {
         if (encryptionFileResult.getError() != null) {
-            showErrorDialog();
+            UiUtils.errorDialog(getContext(), "Error encrypting file");
         }
     }
 

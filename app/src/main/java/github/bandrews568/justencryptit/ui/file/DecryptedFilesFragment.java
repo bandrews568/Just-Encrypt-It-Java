@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Environment;
@@ -11,6 +12,7 @@ import android.os.FileObserver;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -26,15 +28,15 @@ import github.bandrews568.justencryptit.model.FileListItem;
 public class DecryptedFilesFragment extends Fragment implements OnListItemClickListener {
 
     @BindView(R.id.recycler_view_decrypted_files) RecyclerView recyclerView;
+    @BindView(R.id.view_empty_files_decrypted_files) LinearLayout linearLayoutEmptyFiles;
 
     private Unbinder unbinder;
-    private FileObserver fileObserver;
+    private FileViewModel viewModel;
     private List<FileListItem> files = new ArrayList<>();
     private DecryptedFilesRecyclerViewAdapter decryptedFilesRecyclerViewAdapter;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_decrypted_files_list, container, false);
         unbinder = ButterKnife.bind(this, view);
         decryptedFilesRecyclerViewAdapter = new DecryptedFilesRecyclerViewAdapter(requireContext(), files);
@@ -44,41 +46,27 @@ public class DecryptedFilesFragment extends Fragment implements OnListItemClickL
     }
 
     @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+
+        viewModel = ViewModelProviders.of(requireActivity()).get(FileViewModel.class);
+        viewModel.getDecryptedFilesLiveData().observe(this, this::handleDecryptedListResult);
+        viewModel.populateFiles();
+        files = viewModel.getDecryptedFilesList();
+        decryptedFilesRecyclerViewAdapter.setValues(files);
+        decryptedFilesRecyclerViewAdapter.notifyDataSetChanged();
+    }
+
+    @Override
     public void onStart() {
         super.onStart();
 
-        populateFilesList();
-
-        File directory = new File(Environment.getExternalStorageDirectory() + File.separator + "JustEncryptIt");
-
-        if (directory.exists()) {
-            if (fileObserver == null) {
-                fileObserver = new FileObserver(directory.getPath(), FileObserver.ALL_EVENTS) {
-                    @Override
-                    public void onEvent(int event, @Nullable String path) {
-                        // Only refresh the file list after new, deleted and renamed file events
-                        if (event == FileObserver.CLOSE_WRITE || event == FileObserver.DELETE || event == FileObserver.MOVED_TO) {
-                            getActivity().runOnUiThread(() -> {
-                                if (recyclerView.getAdapter() != null) {
-                                    populateFilesList();
-                                }
-                            });
-                        }
-                    }
-                };
-            }
-
-            fileObserver.startWatching();
-        }
+        toggleEmptyState();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-
-        if (fileObserver != null) {
-            fileObserver.stopWatching();
-        }
     }
 
     @Override
@@ -92,28 +80,19 @@ public class DecryptedFilesFragment extends Fragment implements OnListItemClickL
         // Show file sheet bottom dialog with the decrypted file options
         FileInfoBottomSheetFragment fileInfoBottomSheetFragment = FileInfoBottomSheetFragment.newInstance("decrypt");
         fileInfoBottomSheetFragment.setFileListItem(item);
+        fileInfoBottomSheetFragment.setContext(getContext());
         fileInfoBottomSheetFragment.show(requireFragmentManager(), null);
     }
 
-    private void populateFilesList() {
-        File directory = new File(Environment.getExternalStorageDirectory() + File.separator + "JustEncryptIt");
+    private void toggleEmptyState() {
+        linearLayoutEmptyFiles.setVisibility(files.isEmpty() ? View.VISIBLE : View.INVISIBLE);
+    }
 
-        files.clear();
-
-        if (!directory.exists() || directory.listFiles() == null) return;
-
-        for (File file : directory.listFiles()) {
-            // Need to check the file extensions to include any files that don't end in .jei
-            if (!file.getName().endsWith(".jei")) {
-                FileListItem fileListItem = new FileListItem();
-                fileListItem.setLocation(file.getPath());
-                fileListItem.setTime(file.lastModified());
-                fileListItem.setFilename(file.getName());
-                fileListItem.setSize(file.length());
-                files.add(fileListItem);
-            }
-        }
-
+    private void handleDecryptedListResult(List<FileListItem> decryptedFileList) {
+        files =  decryptedFileList;
+        decryptedFilesRecyclerViewAdapter.setValues(files);
         decryptedFilesRecyclerViewAdapter.notifyDataSetChanged();
+
+        toggleEmptyState();
     }
 }

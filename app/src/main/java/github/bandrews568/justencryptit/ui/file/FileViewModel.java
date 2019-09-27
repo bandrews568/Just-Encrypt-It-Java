@@ -10,6 +10,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import github.bandrews568.justencryptit.model.EncryptFileWork;
@@ -23,11 +25,11 @@ public class FileViewModel extends ViewModel {
 
     private SingleLiveEvent<EncryptionFileResult> encryptionLiveData = new SingleLiveEvent<>();
 
-    private MutableLiveData<Set<FileListItem>> encryptedFilesLiveData = new MutableLiveData<>();
-    private MutableLiveData<Set<FileListItem>> decryptedFilesLiveData = new MutableLiveData<>();
+    private MutableLiveData<List<FileListItem>> encryptedFilesLiveData = new MutableLiveData<>();
+    private MutableLiveData<List<FileListItem>> decryptedFilesLiveData = new MutableLiveData<>();
 
-    private Set<FileListItem> encryptedFilesSet = new ArraySet<>();
-    private Set<FileListItem> decryptedFilesSet = new ArraySet<>();
+    private List<FileListItem> encryptedFilesList = new ArrayList<>();
+    private List<FileListItem> decryptedFilesList = new ArrayList<>();
 
     private File directory = new File(Environment.getExternalStorageDirectory() + File.separator + "JustEncryptIt");
 
@@ -42,7 +44,8 @@ public class FileViewModel extends ViewModel {
     private FileObserver fileObserver = new FileObserver(directory.getPath(), fileEvents) {
         @Override
         public void onEvent(int event, @Nullable String path) {
-            updateFileSets();
+            System.out.println("Fileobserver event!!!!@#@!#@!#@!#");
+            updateFiles();
         }
     };
 
@@ -51,10 +54,17 @@ public class FileViewModel extends ViewModel {
         new AsyncFileEncryption().execute(encryptFileWork);
     }
 
-    private void updateFileSets() {
+    public void decryptFile(String password, File inputFile) {
+
+    }
+
+    private void updateFiles() {
         File directory = new File(Environment.getExternalStorageDirectory() + File.separator + "JustEncryptIt");
 
         if (!directory.exists() || directory.listFiles() == null) return;
+
+        encryptedFilesList.clear();
+        decryptedFilesList.clear();
 
         for (File file : directory.listFiles()) {
             FileListItem fileListItem = new FileListItem();
@@ -66,32 +76,64 @@ public class FileViewModel extends ViewModel {
             // Need to check the file extensions to include only .jei files
             if (file.getName().endsWith(".jei")) {
                 // Add the file to the encrypted set
-                encryptedFilesSet.add(fileListItem);
+                encryptedFilesList.add(fileListItem);
             } else {
                 // Add the file to the decrypted set
-                decryptedFilesSet.add(fileListItem);
+                decryptedFilesList.add(fileListItem);
             }
         }
+
+        encryptedFilesLiveData.postValue(encryptedFilesList);
+        decryptedFilesLiveData.postValue(decryptedFilesList);
+    }
+
+    public void populateFiles() {
+        File directory = new File(Environment.getExternalStorageDirectory() + File.separator + "JustEncryptIt");
+
+        if (!directory.exists() || directory.listFiles() == null) return;
+
+        encryptedFilesList.clear();
+        decryptedFilesList.clear();
+
+        for (File file : directory.listFiles()) {
+            FileListItem fileListItem = new FileListItem();
+            fileListItem.setLocation(file.getPath());
+            fileListItem.setTime(file.lastModified());
+            fileListItem.setFilename(file.getName());
+            fileListItem.setSize(file.length());
+
+            // Need to check the file extensions to include only .jei files
+            if (file.getName().endsWith(".jei")) {
+                // Add the file to the encrypted set
+                encryptedFilesList.add(fileListItem);
+            } else {
+                // Add the file to the decrypted set
+                decryptedFilesList.add(fileListItem);
+            }
+        }
+
+        encryptedFilesLiveData.postValue(encryptedFilesList);
+        decryptedFilesLiveData.postValue(decryptedFilesList);
     }
 
     public SingleLiveEvent<EncryptionFileResult> getEncryptionLiveData() {
         return encryptionLiveData;
     }
 
-    public MutableLiveData<Set<FileListItem>> getEncryptedFilesLiveData() {
+    public MutableLiveData<List<FileListItem>> getEncryptedFilesLiveData() {
         return encryptedFilesLiveData;
     }
 
-    public MutableLiveData<Set<FileListItem>> getDecryptedFilesLiveData() {
+    public MutableLiveData<List<FileListItem>> getDecryptedFilesLiveData() {
         return decryptedFilesLiveData;
     }
 
-    public Set<FileListItem> getEncryptedFilesSet() {
-        return encryptedFilesSet;
+    public List<FileListItem> getEncryptedFilesList() {
+        return encryptedFilesList;
     }
 
-    public Set<FileListItem> getDecryptedFilesSet() {
-        return decryptedFilesSet;
+    public List<FileListItem> getDecryptedFilesList() {
+        return decryptedFilesList;
     }
 
     public FileObserver getFileObserver() {

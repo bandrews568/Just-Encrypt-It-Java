@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
@@ -22,7 +23,7 @@ import github.bandrews568.justencryptit.model.FileListItem;
 public class DecryptedFilesRecyclerViewAdapter extends RecyclerView.Adapter<DecryptedFilesRecyclerViewAdapter.ViewHolder> {
 
     private Context context;
-    private final List<FileListItem> values;
+    private List<FileListItem> values;
     private OnListItemClickListener listener;
 
     public DecryptedFilesRecyclerViewAdapter(Context context, List<FileListItem> items) {
@@ -75,5 +76,33 @@ public class DecryptedFilesRecyclerViewAdapter extends RecyclerView.Adapter<Decr
 
     public void setListener(OnListItemClickListener listener) {
         this.listener = listener;
+    }
+
+    public void setValues(List<FileListItem> values) {
+        List<FileListItem> previousData = values;
+
+        this.values = values;
+
+        DiffUtil.calculateDiff(new DiffUtil.Callback() {
+            @Override
+            public int getOldListSize() {
+                return previousData != null ? previousData.size() : 0;
+            }
+
+            @Override
+            public int getNewListSize() {
+                return values != null ? previousData.size() : 0;
+            }
+
+            @Override
+            public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+                return previousData.get(oldItemPosition).equals(values.get(newItemPosition));
+            }
+
+            @Override
+            public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+                return true;
+            }
+        }).dispatchUpdatesTo(this);
     }
 }

@@ -1,6 +1,7 @@
 package github.bandrews568.justencryptit.ui.file;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
@@ -23,7 +24,7 @@ import java.util.List;
 public class EncryptedFilesRecyclerViewAdapter extends RecyclerView.Adapter<EncryptedFilesRecyclerViewAdapter.ViewHolder> {
 
     private Context context;
-    private final List<FileListItem> values;
+    private List<FileListItem> values;
     private OnListItemClickListener listener;
 
     public EncryptedFilesRecyclerViewAdapter(Context context, List<FileListItem> items) {
@@ -65,7 +66,7 @@ public class EncryptedFilesRecyclerViewAdapter extends RecyclerView.Adapter<Encr
 
         @BindView(R.id.tv_encrypted_files_name) TextView tvName;
         @BindView(R.id.tv_encrypted_files_size) TextView tvSize;
-        @BindView(R.id.tv_encrypted_files_last_modified) TextView tvLastModified;
+        @BindView(R.id.tv_dialog_error_message) TextView tvLastModified;
         @BindView(R.id.linear_layout_encrypted_files) LinearLayout linearLayout;
 
         public ViewHolder(View view) {
@@ -76,5 +77,33 @@ public class EncryptedFilesRecyclerViewAdapter extends RecyclerView.Adapter<Encr
 
     public void setListener(OnListItemClickListener listener) {
         this.listener = listener;
+    }
+
+    public void setValues(List<FileListItem> values) {
+        List<FileListItem> previousData = values;
+
+        this.values = values;
+
+        DiffUtil.calculateDiff(new DiffUtil.Callback() {
+            @Override
+            public int getOldListSize() {
+                return previousData != null ? previousData.size() : 0;
+            }
+
+            @Override
+            public int getNewListSize() {
+                return values != null ? previousData.size() : 0;
+            }
+
+            @Override
+            public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+                return previousData.get(oldItemPosition).equals(values.get(newItemPosition));
+            }
+
+            @Override
+            public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+                return true;
+            }
+        }).dispatchUpdatesTo(this);
     }
 }
