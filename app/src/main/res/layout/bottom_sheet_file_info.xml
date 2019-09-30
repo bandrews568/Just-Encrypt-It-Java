@@ -15,7 +15,7 @@
         android:orientation="horizontal">
 
         <ImageView
-            android:id="@+id/iv_bottom_sheet_file_info_decrypt"
+            android:id="@+id/iv_bottom_sheet_file_info_lock"
             android:layout_width="?attr/actionBarSize"
             android:layout_height="?attr/actionBarSize"
             android:padding="16dp"

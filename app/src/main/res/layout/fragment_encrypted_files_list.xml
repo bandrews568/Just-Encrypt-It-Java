@@ -20,7 +20,7 @@
 
     <include
         android:id="@+id/view_empty_files_encrypted_files"
-        layout="@layout/view_empty_file_list"
+        layout="@layout/view_encrypted_empty_file_list"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"

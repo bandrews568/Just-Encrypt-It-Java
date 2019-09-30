@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/constraint_layout_decrypted_files_list"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recycler_view_decrypted_files"
@@ -17,4 +16,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:listitem="@layout/fragment_decrypted_files" />
+
+    <include
+        android:id="@+id/view_empty_files_decrypted_files"
+        layout="@layout/view_decrypted_empty_file_list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/recycler_view_decrypted_files"
+        app:layout_constraintStart_toStartOf="@+id/recycler_view_decrypted_files"
+        app:layout_constraintTop_toTopOf="@+id/recycler_view_decrypted_files" />
 </androidx.constraintlayout.widget.ConstraintLayout>

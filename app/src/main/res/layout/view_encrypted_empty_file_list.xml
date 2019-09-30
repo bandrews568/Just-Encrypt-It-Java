@@ -5,11 +5,11 @@
     android:layout_height="match_parent">
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/iv_view_encrypted_empty_file_list"
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:tint="#606060"
-        app:srcCompat="@drawable/ic_file_document_outline" />
+        app:srcCompat="@drawable/ic_file_lock" />
 
     <TextView
         android:id="@+id/textView3"

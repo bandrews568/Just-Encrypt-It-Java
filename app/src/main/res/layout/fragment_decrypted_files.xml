@@ -74,6 +74,7 @@
         android:id="@+id/view_decrypted_files_seperator"
         android:layout_width="match_parent"
         android:layout_height="1dp"
+        android:layout_marginRight="16dp"
         android:background="@color/grey_40" />
 
 </LinearLayout>
