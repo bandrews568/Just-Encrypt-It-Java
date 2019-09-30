@@ -1,8 +1,11 @@
 package github.bandrews568.justencryptit.ui.file;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +18,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
+import androidx.core.app.ShareCompat;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -25,6 +30,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import github.bandrews568.justencryptit.BuildConfig;
 import github.bandrews568.justencryptit.R;
 import github.bandrews568.justencryptit.model.FileListItem;
 import github.bandrews568.justencryptit.utils.UiUtils;
@@ -138,7 +144,14 @@ public class FileInfoBottomSheetFragment extends BottomSheetDialogFragment {
 
     @OnClick(R.id.ll_bottom_sheet_file_info_share)
     public void onShareClicked() {
-        // Share file
+        File fileToShare = new File(fileListItem.getLocation());
+
+        Uri contentUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".files", fileToShare);
+
+        ShareCompat.IntentBuilder.from((Activity) context)
+                .setType("*/*")
+                .setStream(contentUri)
+                .startChooser();
     }
 
     @OnClick(R.id.ll_bottom_sheet_file_info_info)
