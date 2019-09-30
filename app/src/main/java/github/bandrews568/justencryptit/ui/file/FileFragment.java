@@ -114,31 +114,6 @@ public class FileFragment extends Fragment implements PasswordDialog.PasswordDia
         }
     }
 
-    private void showFilePickerDialog() {
-        DialogProperties properties = new DialogProperties();
-        properties.selection_mode = DialogConfigs.SINGLE_MODE;
-        properties.selection_type = DialogConfigs.FILE_SELECT;
-        properties.root = new File(DialogConfigs.DEFAULT_DIR);
-        properties.error_dir = new File(DialogConfigs.DEFAULT_DIR);
-        properties.offset = new File(DialogConfigs.DEFAULT_DIR);
-        properties.extensions = null;
-
-        dialog = new FilePickerDialog(getContext(), properties);
-        dialog.setTitle("Select a File");
-        dialog.setDialogSelectionListener(files -> {
-            selectedFiles = files;
-            showPasswordDialog();
-        });
-
-        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, FilePickerDialog.EXTERNAL_READ_PERMISSION_GRANT);
-    }
-
-    private void showPasswordDialog() {
-        PasswordDialog passwordDialog = new PasswordDialog();
-        passwordDialog.setPasswordDialogListener(this);
-        passwordDialog.show(getFragmentManager(), null);
-    }
-
     @Override
     public void onDialogSubmitClicked(String password) {
         // Encrypt the file with the password
@@ -164,6 +139,31 @@ public class FileFragment extends Fragment implements PasswordDialog.PasswordDia
     @Override
     public void onDialogCancel() {
         selectedFiles = null;
+    }
+
+    private void showFilePickerDialog() {
+        DialogProperties properties = new DialogProperties();
+        properties.selection_mode = DialogConfigs.SINGLE_MODE;
+        properties.selection_type = DialogConfigs.FILE_SELECT;
+        properties.root = new File(DialogConfigs.DEFAULT_DIR);
+        properties.error_dir = new File(DialogConfigs.DEFAULT_DIR);
+        properties.offset = new File(DialogConfigs.DEFAULT_DIR);
+        properties.extensions = null;
+
+        dialog = new FilePickerDialog(getContext(), properties);
+        dialog.setTitle("Select a File");
+        dialog.setDialogSelectionListener(files -> {
+            selectedFiles = files;
+            showPasswordDialog();
+        });
+
+        requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, FilePickerDialog.EXTERNAL_READ_PERMISSION_GRANT);
+    }
+
+    private void showPasswordDialog() {
+        PasswordDialog passwordDialog = new PasswordDialog();
+        passwordDialog.setPasswordDialogListener(this);
+        passwordDialog.show(getFragmentManager(), null);
     }
 
     private void handleEncryptionFileResult(EncryptionFileResult encryptionFileResult) {

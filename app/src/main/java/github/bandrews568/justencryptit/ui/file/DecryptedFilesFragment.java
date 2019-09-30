@@ -22,10 +22,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import github.bandrews568.justencryptit.R;
+import github.bandrews568.justencryptit.model.EncryptionFileResult;
 import github.bandrews568.justencryptit.model.FileListItem;
+import github.bandrews568.justencryptit.utils.UiUtils;
 
 
-public class DecryptedFilesFragment extends Fragment implements OnListItemClickListener {
+public class DecryptedFilesFragment extends Fragment implements OnListItemClickListener, OnEncryptActionClickListener, PasswordDialog.PasswordDialogListener {
 
     @BindView(R.id.recycler_view_decrypted_files) RecyclerView recyclerView;
     @BindView(R.id.view_empty_files_decrypted_files) LinearLayout linearLayoutEmptyFiles;
@@ -34,6 +36,7 @@ public class DecryptedFilesFragment extends Fragment implements OnListItemClickL
     private FileViewModel viewModel;
     private List<FileListItem> files = new ArrayList<>();
     private DecryptedFilesRecyclerViewAdapter decryptedFilesRecyclerViewAdapter;
+    private FileListItem fileListItem;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -51,6 +54,7 @@ public class DecryptedFilesFragment extends Fragment implements OnListItemClickL
 
         viewModel = ViewModelProviders.of(requireActivity()).get(FileViewModel.class);
         viewModel.getDecryptedFilesLiveData().observe(this, this::handleDecryptedListResult);
+        viewModel.getEncryptionActionLiveData().observe(this, this::handleEncryptionResult);
         viewModel.populateFiles();
         files = viewModel.getDecryptedFilesList();
         decryptedFilesRecyclerViewAdapter.setValues(files);
@@ -81,7 +85,34 @@ public class DecryptedFilesFragment extends Fragment implements OnListItemClickL
         FileInfoBottomSheetFragment fileInfoBottomSheetFragment = FileInfoBottomSheetFragment.newInstance("decrypt");
         fileInfoBottomSheetFragment.setFileListItem(item);
         fileInfoBottomSheetFragment.setContext(getContext());
+        fileInfoBottomSheetFragment.setListener(this);
         fileInfoBottomSheetFragment.show(requireFragmentManager(), null);
+    }
+
+    @Override
+    public void onEncryptActionClick(FileListItem fileListItem) {
+        this.fileListItem = fileListItem;
+
+        // Show password dialog
+        PasswordDialog passwordDialog = new PasswordDialog();
+        passwordDialog.setPasswordDialogListener(this);
+        passwordDialog.show(getFragmentManager(), null);
+    }
+
+    @Override
+    public void onDialogSubmitClicked(String password) {
+        if (fileListItem != null) {
+            // Encrypt the fileListItem
+            File directory = new File(Environment.getExternalStorageDirectory() + File.separator + "JustEncryptIt");
+            File inputFile = new File(fileListItem.getLocation());
+            File outputFile = new File(directory, inputFile.getName() + ".jei");
+            viewModel.encryptFileAction(password, inputFile, outputFile);
+        }
+    }
+
+    @Override
+    public void onDialogCancel() {
+        fileListItem = null;
     }
 
     private void toggleEmptyState() {
@@ -94,5 +125,18 @@ public class DecryptedFilesFragment extends Fragment implements OnListItemClickL
         decryptedFilesRecyclerViewAdapter.notifyDataSetChanged();
 
         toggleEmptyState();
+    }
+
+    private void handleEncryptionResult(EncryptionFileResult result) {
+        if (result.getError() != null) {
+            UiUtils.errorDialog(getContext(), "Error encrypting file");
+        } else {
+            // Delete the fileListItem
+            File file = new File(fileListItem.getLocation());
+
+            if (!file.delete()) {
+                System.out.println("Error deleting file");
+            }
+        }
     }
 }

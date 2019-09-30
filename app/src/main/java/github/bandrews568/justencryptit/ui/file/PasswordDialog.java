@@ -66,8 +66,8 @@ public class PasswordDialog extends DialogFragment {
     }
 
     @Override
-    public void onDismiss(@NonNull DialogInterface dialog) {
-        super.onDismiss(dialog);
+    public void onCancel(@NonNull DialogInterface dialog) {
+        super.onCancel(dialog);
 
         if (passwordDialogListener != null) {
             passwordDialogListener.onDialogCancel();

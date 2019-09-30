@@ -80,6 +80,7 @@ public class FileInfoBottomSheetFragment extends BottomSheetDialogFragment {
         // Show password dialog
         if (listener != null) {
             listener.onEncryptActionClick(fileListItem);
+            dismiss();
         }
     }
 
