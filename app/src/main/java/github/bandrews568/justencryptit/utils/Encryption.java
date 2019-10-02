@@ -1,8 +1,8 @@
 package github.bandrews568.justencryptit.utils;
 
 import android.util.Base64;
-import android.util.Log;
-import android.util.TimingLogger;
+
+import androidx.lifecycle.MutableLiveData;
 
 import org.jasypt.util.text.BasicTextEncryptor;
 
@@ -56,30 +56,48 @@ public class Encryption {
         }
     }
 
-    public static void encryptFile(String password, File inputFile, File outputFile) throws CryptoException {
-        doCrypto(Cipher.ENCRYPT_MODE, password, inputFile, outputFile);
+    public static void encryptFile(String password, File inputFile, File outputFile, MutableLiveData<Integer> cryptoProgressLiveData) throws CryptoException {
+        doCrypto(Cipher.ENCRYPT_MODE, password, inputFile, outputFile, cryptoProgressLiveData);
     }
 
-    public static void decryptFile(String password, File inputFile, File outputFile) throws CryptoException {
-        doCrypto(Cipher.DECRYPT_MODE, password, inputFile, outputFile);
+    public static void decryptFile(String password, File inputFile, File outputFile, MutableLiveData<Integer> cryptoProgressLiveData) throws CryptoException {
+        doCrypto(Cipher.DECRYPT_MODE, password, inputFile, outputFile, cryptoProgressLiveData);
     }
 
-    private static void doCrypto(int cipherMode, String key, File inputFile, File outputFile) throws CryptoException {
+    private static void doCrypto(int cipherMode, String key, File inputFile, File outputFile, MutableLiveData<Integer> cryptoProgressLiveData) throws CryptoException {
         try {
             Key secretKey = new SecretKeySpec(key.getBytes(), "AES");
             Cipher cipher = Cipher.getInstance("AES");
             cipher.init(cipherMode, secretKey);
 
             FileInputStream inputStream = new FileInputStream(inputFile);
-            byte[] inputBytes = new byte[(int) inputFile.length()];
-            inputStream.read(inputBytes);
-
-            byte[] outputBytes = cipher.doFinal(inputBytes);
-
             FileOutputStream outputStream = new FileOutputStream(outputFile);
-            outputStream.write(outputBytes);
+
+            byte[] input = new byte[2048];
+            int bytesRead;
+
+            long totalFileSize = inputFile.length();
+            double percentUnit = 100.0 / totalFileSize;
+            long readLength = 0;
+
+            while ((bytesRead = inputStream.read(input)) != -1) {
+                byte[] output = cipher.update(input, 0, bytesRead);
+                readLength += bytesRead;
+                cryptoProgressLiveData.postValue((int) Math.round(percentUnit * readLength));
+
+                if (output != null) {
+                    outputStream.write(output);
+                }
+            }
+
+            byte[] output = cipher.doFinal();
+            if (output != null)
+                outputStream.write(output);
+
+            cryptoProgressLiveData.postValue(100);
 
             inputStream.close();
+            outputStream.flush();
             outputStream.close();
 
         } catch (NoSuchPaddingException | NoSuchAlgorithmException
@@ -87,18 +105,5 @@ public class Encryption {
                 | IllegalBlockSizeException | IOException ex) {
             throw new CryptoException("Error encrypting/decrypting file", ex);
         }
-    }
-
-    public static String getFileExtension(String filename) {
-        int index = filename.lastIndexOf(".");
-        if (filename.lastIndexOf(".") == -1) {
-            return "";
-        }
-        return filename.substring(index);
-    }
-
-    public static String getFileBaseName(String filename) {
-        int index = filename.lastIndexOf('.');
-        return index == -1 ? filename : filename.substring(0, index);
     }
 }

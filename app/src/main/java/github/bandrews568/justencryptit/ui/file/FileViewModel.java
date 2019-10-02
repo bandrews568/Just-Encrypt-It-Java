@@ -14,6 +14,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import github.bandrews568.justencryptit.model.EncryptFileWork;
 import github.bandrews568.justencryptit.model.EncryptionFileResult;
@@ -31,10 +32,14 @@ public class FileViewModel extends ViewModel {
     private MutableLiveData<List<FileListItem>> encryptedFilesLiveData = new MutableLiveData<>();
     private MutableLiveData<List<FileListItem>> decryptedFilesLiveData = new MutableLiveData<>();
 
+    private MutableLiveData<Integer> cryptoProgressLiveData = new MutableLiveData<>();
+
     private List<FileListItem> encryptedFilesList = new ArrayList<>();
     private List<FileListItem> decryptedFilesList = new ArrayList<>();
 
     private File directory = new File(Environment.getExternalStorageDirectory() + File.separator + "JustEncryptIt");
+
+    private AtomicBoolean backgroundFileWork = new AtomicBoolean(false);
 
     private int fileEvents = (FileObserver.CREATE |
                               FileObserver.DELETE |
@@ -47,7 +52,10 @@ public class FileViewModel extends ViewModel {
     private FileObserver fileObserver = new FileObserver(directory.getPath(), fileEvents) {
         @Override
         public void onEvent(int event, @Nullable String path) {
-            updateFiles();
+            // Need a boolean flag here
+            if (!backgroundFileWork.get()) {
+                updateFiles();
+            }
         }
     };
 
@@ -166,19 +174,26 @@ public class FileViewModel extends ViewModel {
         return encryptionActionLiveData;
     }
 
-    private class AsyncFileEncryption extends AsyncTask<EncryptFileWork, Void, EncryptionFileResult> {
+    public MutableLiveData<Integer> getCryptoProgressLiveData() {
+        return cryptoProgressLiveData;
+    }
+
+    private class AsyncFileEncryption extends AsyncTask<EncryptFileWork, Integer, EncryptionFileResult> {
 
         private SingleLiveEvent<EncryptionFileResult> liveData;
 
         @Override
         protected EncryptionFileResult doInBackground(EncryptFileWork... params) {
+            backgroundFileWork.set(true);
+
             EncryptFileWork encryptFileWork = params[0];
             EncryptionFileResult encryptionFileResult = new EncryptionFileResult();
 
             try{
                 Encryption.encryptFile(encryptFileWork.getPassword(),
                         encryptFileWork.getInputFile(),
-                        encryptFileWork.getOutputFile());
+                        encryptFileWork.getOutputFile(),
+                        cryptoProgressLiveData);
 
 
             } catch (CryptoException e) {
@@ -189,7 +204,14 @@ public class FileViewModel extends ViewModel {
         }
 
         @Override
+        protected void onProgressUpdate(Integer... values) {
+            super.onProgressUpdate(values);
+        }
+
+        @Override
         protected void onPostExecute(EncryptionFileResult encryptionFileResult) {
+            backgroundFileWork.set(false);
+            populateFiles();
             liveData.postValue(encryptionFileResult);
         }
 
@@ -202,13 +224,16 @@ public class FileViewModel extends ViewModel {
 
         @Override
         protected EncryptionFileResult doInBackground(EncryptFileWork... params) {
+            backgroundFileWork.set(true);
+
             EncryptFileWork encryptFileWork = params[0];
             EncryptionFileResult encryptionFileResult = new EncryptionFileResult();
 
             try{
                 Encryption.decryptFile(encryptFileWork.getPassword(),
                         encryptFileWork.getInputFile(),
-                        encryptFileWork.getOutputFile());
+                        encryptFileWork.getOutputFile(),
+                        cryptoProgressLiveData);
 
 
             } catch (CryptoException e) {
@@ -220,6 +245,8 @@ public class FileViewModel extends ViewModel {
 
         @Override
         protected void onPostExecute(EncryptionFileResult encryptionFileResult) {
+            backgroundFileWork.set(false);
+            populateFiles();
             decryptedLiveData.postValue(encryptionFileResult);
         }
     }

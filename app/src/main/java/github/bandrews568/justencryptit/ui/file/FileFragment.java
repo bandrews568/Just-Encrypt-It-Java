@@ -52,6 +52,7 @@ public class FileFragment extends Fragment implements PasswordDialog.PasswordDia
     private FileViewModel viewModel;
     private FilePickerDialog dialog;
     private String[] selectedFiles;
+    private ProgressDialog progressDialog;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -76,6 +77,7 @@ public class FileFragment extends Fragment implements PasswordDialog.PasswordDia
 
         viewModel = ViewModelProviders.of(requireActivity()).get(FileViewModel.class);
         viewModel.getEncryptionLiveData().observe(this, this::handleEncryptionFileResult);
+        viewModel.getCryptoProgressLiveData().observe(this, this::handleCryptoProgress);
     }
 
     @Override
@@ -133,6 +135,9 @@ public class FileFragment extends Fragment implements PasswordDialog.PasswordDia
         File inputFile = new File(selectedFiles[0]);
         File outputFile = new File(directory, inputFile.getName() + ".jei");
 
+        progressDialog = ProgressDialog.newInstance("encrypt");
+        progressDialog.show(getFragmentManager(), null);
+
         viewModel.encryptFile(password, inputFile, outputFile);
     }
 
@@ -169,6 +174,18 @@ public class FileFragment extends Fragment implements PasswordDialog.PasswordDia
     private void handleEncryptionFileResult(EncryptionFileResult encryptionFileResult) {
         if (encryptionFileResult.getError() != null) {
             UiUtils.errorDialog(getContext(), "Error encrypting file");
+        }
+
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
+
+        progressDialog = null;
+    }
+
+    private void handleCryptoProgress(int progress) {
+        if (progressDialog != null) {
+            progressDialog.setProgress(progress);
         }
     }
 
