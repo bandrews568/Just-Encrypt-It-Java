@@ -37,6 +37,7 @@ public class DecryptedFilesFragment extends Fragment implements OnListItemClickL
     private List<FileListItem> files = new ArrayList<>();
     private DecryptedFilesRecyclerViewAdapter decryptedFilesRecyclerViewAdapter;
     private FileListItem fileListItem;
+    private ProgressDialog progressDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -55,6 +56,7 @@ public class DecryptedFilesFragment extends Fragment implements OnListItemClickL
         viewModel = ViewModelProviders.of(requireActivity()).get(FileViewModel.class);
         viewModel.getDecryptedFilesLiveData().observe(this, this::handleDecryptedListResult);
         viewModel.getEncryptionActionLiveData().observe(this, this::handleEncryptionResult);
+        viewModel.getCryptoProgressLiveData().observe(this, this::handleCryptoProgress);
         viewModel.populateFiles();
         files = viewModel.getDecryptedFilesList();
         decryptedFilesRecyclerViewAdapter.setValues(files);
@@ -106,6 +108,10 @@ public class DecryptedFilesFragment extends Fragment implements OnListItemClickL
             File directory = new File(Environment.getExternalStorageDirectory() + File.separator + "JustEncryptIt");
             File inputFile = new File(fileListItem.getLocation());
             File outputFile = new File(directory, inputFile.getName() + ".jei");
+
+            progressDialog = ProgressDialog.newInstance("decrypt");
+            progressDialog.show(getFragmentManager(), null);
+
             viewModel.encryptFileAction(password, inputFile, outputFile);
         }
     }
@@ -137,6 +143,18 @@ public class DecryptedFilesFragment extends Fragment implements OnListItemClickL
             if (!file.delete()) {
                 System.out.println("Error deleting file");
             }
+
+            if (progressDialog != null) {
+                progressDialog.dismiss();
+            }
+
+            progressDialog = null;
+        }
+    }
+
+    private void handleCryptoProgress(int progress) {
+        if (progressDialog != null) {
+            progressDialog.setProgress(progress);
         }
     }
 }

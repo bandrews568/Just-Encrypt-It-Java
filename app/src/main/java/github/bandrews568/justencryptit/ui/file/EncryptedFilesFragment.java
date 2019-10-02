@@ -34,6 +34,7 @@ public class EncryptedFilesFragment extends Fragment implements OnListItemClickL
     private List<FileListItem> files = new ArrayList<>();
     private EncryptedFilesRecyclerViewAdapter encryptedFilesRecyclerViewAdapter;
     private FileListItem fileListItem;
+    private ProgressDialog progressDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,6 +53,7 @@ public class EncryptedFilesFragment extends Fragment implements OnListItemClickL
         viewModel = ViewModelProviders.of(requireActivity()).get(FileViewModel.class);
         viewModel.getEncryptedFilesLiveData().observe(this, this::handleEncryptedListResult);
         viewModel.getDecryptedLiveData().observe(this, this::handleDecryptionResult);
+        viewModel.getCryptoProgressLiveData().observe(this, this::handleCryptoProgress);
         viewModel.populateFiles();
         files = viewModel.getEncryptedFilesList();
         encryptedFilesRecyclerViewAdapter.setValues(files);
@@ -94,6 +96,9 @@ public class EncryptedFilesFragment extends Fragment implements OnListItemClickL
     @Override
     public void onDialogSubmitClicked(String password) {
         if (fileListItem != null) {
+            progressDialog = ProgressDialog.newInstance("Decrypt");
+            progressDialog.show(getFragmentManager(), null);
+
             // Decrypt the fileListItem
             viewModel.decryptFile(password, fileListItem);
         }
@@ -114,6 +119,12 @@ public class EncryptedFilesFragment extends Fragment implements OnListItemClickL
                 System.out.println("Error deleting file");
             }
         }
+
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
+
+        progressDialog = null;
     }
 
     private void handleEncryptedListResult(List<FileListItem> encryptedFileList) {
@@ -122,6 +133,12 @@ public class EncryptedFilesFragment extends Fragment implements OnListItemClickL
         encryptedFilesRecyclerViewAdapter.notifyDataSetChanged();
 
         toggleEmptyState();
+    }
+
+    private void handleCryptoProgress(int progress) {
+        if (progressDialog != null) {
+            progressDialog.setProgress(progress);
+        }
     }
 
     private void toggleEmptyState() {
