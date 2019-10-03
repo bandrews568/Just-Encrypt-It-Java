@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "520932914231",
+    "firebase_url": "https://just-encrypt-it.firebaseio.com",
+    "project_id": "just-encrypt-it",
+    "storage_bucket": "just-encrypt-it.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:520932914231:android:a69b6d897a370b01ca7bb2",
+        "android_client_info": {
+          "package_name": "github.bandrews568.justencryptit"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "520932914231-o1t5kl37dfg8g8e8n1d5eji0api439ta.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSn5hzmFQQ5Sw5b-ICkFXGsUCDEiHxIao"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "520932914231-o1t5kl37dfg8g8e8n1d5eji0api439ta.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -46,6 +46,7 @@ dependencies {
     annotationProcessor 'com.jakewharton:butterknife-compiler:10.1.0'
     implementation project(path: ':filepicker')
 
-    // https://github.com/Angads25/android-filepicker
-//    implementation 'com.github.angads25:filepicker:1.1.1'
+    implementation 'com.google.firebase:firebase-analytics:17.2.0'
 }
+
+apply plugin: 'com.google.gms.google-services'
