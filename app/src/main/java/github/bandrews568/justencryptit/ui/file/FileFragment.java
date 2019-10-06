@@ -68,6 +68,7 @@ public class FileFragment extends Fragment implements PasswordDialog.PasswordDia
 
         PagerAdapter pagerAdapter = new FileTabsPagerAdapter(getChildFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         viewPager.setAdapter(pagerAdapter);
+
         tabLayout.setupWithViewPager(viewPager);
     }
 

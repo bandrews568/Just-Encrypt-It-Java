@@ -41,8 +41,10 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
+import butterknife.OnTextChanged;
 import butterknife.Unbinder;
 import github.bandrews568.justencryptit.R;
+import github.bandrews568.justencryptit.utils.UiUtils;
 
 public class EncryptorFragment extends Fragment {
 
@@ -78,6 +80,12 @@ public class EncryptorFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_encryptor, container, false);
         unbinder = ButterKnife.bind(this, view);
+
+        btnDecrypt.setEnabled(false);
+        btnDecrypt.setAlpha(0.7f);
+        btnEncrypt.setEnabled(false);
+        btnEncrypt.setAlpha(0.7f);
+
         return view;
     }
 
@@ -92,7 +100,7 @@ public class EncryptorFragment extends Fragment {
                     tilPassword.setError("Invalid password");
                 } else if (encryptionResult.getError() instanceof EncryptionOperationNotPossibleException
                         || encryptionResult.getError() instanceof IllegalArgumentException) {
-                    showErrorToast("Can't decrypt text");
+                    UiUtils.errorToast(requireContext(), "Can't decrypt text");
                 } else if (encryptionResult.getError() instanceof BadPaddingException) {
                     tilPassword.setError("Invalid password");
                 }
@@ -133,6 +141,7 @@ public class EncryptorFragment extends Fragment {
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
+
         if (savedInstanceState != null) {
             tilPassword.getEditText().setText(savedInstanceState.getString("password", ""));
         }
@@ -185,6 +194,7 @@ public class EncryptorFragment extends Fragment {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("password", tilPassword.getEditText().getText().toString());
+        outState.putString("text", etEnterText.getText().toString());
     }
 
     @Override
@@ -204,7 +214,15 @@ public class EncryptorFragment extends Fragment {
                 .getDefaultSharedPreferences(getActivity())
                 .getString("algorithm_choice", "Basic");
 
-        if (algorithm.equals("AES") && password.length() != 16) return;
+        if (password.length() == 0) {
+            tilPassword.setError("Required");
+            return;
+        }
+
+        if (algorithm.equals("AES") && password.length() != 16) {
+            tilPassword.setError("Must be 16 characters");
+            return;
+        }
 
         if (!TextUtils.isEmpty(text)) {
             tilPassword.setError(null);
@@ -227,7 +245,16 @@ public class EncryptorFragment extends Fragment {
                 .getDefaultSharedPreferences(getActivity())
                 .getString("algorithm_choice", "Basic");
 
-        if (algorithm.equals("AES") && password.length() != 16) return;
+        if (password.length() == 0) {
+            tilPassword.setError("Required");
+            return;
+        }
+
+        if (algorithm.equals("AES") && password.length() != 16) {
+            tilPassword.setError("Must be 16 characters");
+            return;
+        }
+
 
         if (!TextUtils.isEmpty(text)) {
             tilPassword.setError(null);
@@ -254,7 +281,7 @@ public class EncryptorFragment extends Fragment {
                 if (text != null) {
                     if (text.length() > 30000) {
                         CharSequence truncatedText = text.subSequence(0, 30000);
-                        showErrorToast(String.format("Couldn't add %d characters", text.length() - 30000));
+                        UiUtils.errorToast(requireContext(), String.format("Couldn't add %d characters", text.length() - 30000));
                         etEnterText.setText(truncatedText);
                     } else {
                         etEnterText.setText(text);
@@ -316,14 +343,33 @@ public class EncryptorFragment extends Fragment {
         editor.commit();
     }
 
-    private void showErrorToast(String message) {
-        Toast toast = new Toast(getActivity());
-        toast.setDuration(Toast.LENGTH_LONG);
+    @OnTextChanged(value=R.id.etEnterText, callback=OnTextChanged.Callback.TEXT_CHANGED)
+    public void onTextChanged(CharSequence s) {
+        if (s.toString().trim().length() == 0) {
+            btnDecrypt.setEnabled(false);
+            btnDecrypt.setAlpha(0.7f);
+            btnEncrypt.setEnabled(false);
+            btnEncrypt.setAlpha(0.7f);
+        } else {
+            btnDecrypt.setEnabled(true);
+            btnDecrypt.setAlpha(1.0f);
+            btnEncrypt.setEnabled(true);
+            btnEncrypt.setAlpha(1.0f);
+        }
+    }
 
-        View custom_view = getLayoutInflater().inflate(R.layout.toast_error, null);
-        ((TextView) custom_view.findViewById(R.id.tv_toast_message)).setText(message);
-
-        toast.setView(custom_view);
-        toast.show();
+    @OnTextChanged(value=R.id.et_encryptor_password, callback=OnTextChanged.Callback.TEXT_CHANGED)
+    public void onPasswordTextChanged(CharSequence s) {
+        if (s.toString().trim().length() == 0) {
+            btnDecrypt.setEnabled(false);
+            btnDecrypt.setAlpha(0.7f);
+            btnEncrypt.setEnabled(false);
+            btnEncrypt.setAlpha(0.7f);
+        } else {
+            btnDecrypt.setEnabled(true);
+            btnDecrypt.setAlpha(1.0f);
+            btnEncrypt.setEnabled(true);
+            btnEncrypt.setAlpha(1.0f);
+        }
     }
 }
