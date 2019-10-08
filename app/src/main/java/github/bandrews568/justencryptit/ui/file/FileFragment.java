@@ -42,8 +42,6 @@ import github.bandrews568.justencryptit.utils.UiUtils;
 
 public class FileFragment extends Fragment implements PasswordDialog.PasswordDialogListener {
 
-    private static String TAG = FileFragment.class.getName();
-
     @BindView(R.id.view_pager_file_fragment) ViewPager viewPager;
     @BindView(R.id.tab_layout_file_fragment) TabLayout tabLayout;
 
@@ -53,6 +51,7 @@ public class FileFragment extends Fragment implements PasswordDialog.PasswordDia
     private FilePickerDialog dialog;
     private String[] selectedFiles;
     private ProgressDialog progressDialog;
+    private FileViewModel.AsyncFileEncryption asyncFileEncryption;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -84,18 +83,39 @@ public class FileFragment extends Fragment implements PasswordDialog.PasswordDia
     @Override
     public void onStart() {
         super.onStart();
+
         viewModel.getFileObserver().startWatching();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        if (asyncFileEncryption != null) {
+            asyncFileEncryption.cancel(true);
+        }
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+
         unbinder.unbind();
     }
 
     @Override
     public void onStop() {
         super.onStop();
+
         viewModel.getFileObserver().stopWatching();
     }
 
@@ -139,7 +159,7 @@ public class FileFragment extends Fragment implements PasswordDialog.PasswordDia
         progressDialog = ProgressDialog.newInstance("encrypt");
         progressDialog.show(getFragmentManager(), null);
 
-        viewModel.encryptFile(password, inputFile, outputFile);
+        asyncFileEncryption = viewModel.encryptFile(password, inputFile, outputFile);
     }
 
     @Override
@@ -182,10 +202,12 @@ public class FileFragment extends Fragment implements PasswordDialog.PasswordDia
         }
 
         progressDialog = null;
+
+        asyncFileEncryption = null;
     }
 
     private void handleCryptoProgress(int progress) {
-        if (progressDialog != null) {
+        if (progressDialog != null && progress != -1 && asyncFileEncryption != null) {
             progressDialog.setProgress(progress);
         }
     }

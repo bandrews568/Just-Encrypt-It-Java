@@ -365,7 +365,7 @@ public class EncryptorFragment extends Fragment {
             btnDecrypt.setAlpha(0.7f);
             btnEncrypt.setEnabled(false);
             btnEncrypt.setAlpha(0.7f);
-        } else {
+        } else if (etEnterText.getText().length() != 0){
             btnDecrypt.setEnabled(true);
             btnDecrypt.setAlpha(1.0f);
             btnEncrypt.setEnabled(true);

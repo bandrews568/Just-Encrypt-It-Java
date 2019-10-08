@@ -35,6 +35,7 @@ public class EncryptedFilesFragment extends Fragment implements OnListItemClickL
     private EncryptedFilesRecyclerViewAdapter encryptedFilesRecyclerViewAdapter;
     private FileListItem fileListItem;
     private ProgressDialog progressDialog;
+    private FileViewModel.AsyncFileDecryption asyncFileDecryption;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -65,6 +66,24 @@ public class EncryptedFilesFragment extends Fragment implements OnListItemClickL
         super.onStart();
 
         toggleEmptyState();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        if (asyncFileDecryption != null) {
+            asyncFileDecryption.cancel(true);
+        }
     }
 
     @Override
@@ -100,7 +119,7 @@ public class EncryptedFilesFragment extends Fragment implements OnListItemClickL
             progressDialog.show(getFragmentManager(), null);
 
             // Decrypt the fileListItem
-            viewModel.decryptFile(password, fileListItem);
+            asyncFileDecryption = viewModel.decryptFile(password, fileListItem);
         }
     }
 
@@ -125,6 +144,8 @@ public class EncryptedFilesFragment extends Fragment implements OnListItemClickL
         }
 
         progressDialog = null;
+
+        asyncFileDecryption = null;
     }
 
     private void handleEncryptedListResult(List<FileListItem> encryptedFileList) {
@@ -136,7 +157,7 @@ public class EncryptedFilesFragment extends Fragment implements OnListItemClickL
     }
 
     private void handleCryptoProgress(int progress) {
-        if (progressDialog != null) {
+        if (progressDialog != null && progress != -1 && asyncFileDecryption != null) {
             progressDialog.setProgress(progress);
         }
     }
