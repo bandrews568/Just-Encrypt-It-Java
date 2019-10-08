@@ -15,6 +15,8 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import github.bandrews568.justencryptit.ui.about.AboutActivity;
 import github.bandrews568.justencryptit.ui.encryptor.EncryptorFragment;
 import github.bandrews568.justencryptit.R;
@@ -24,10 +26,14 @@ import github.bandrews568.justencryptit.ui.settings.SettingsActivity;
 
 public class MainActivity extends AppCompatActivity implements BottomNavigationView.OnNavigationItemSelectedListener {
 
+    @BindView(R.id.main_bottom_navigation) BottomNavigationView bottomNavigationView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ButterKnife.bind(this);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -37,7 +43,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 .replace(R.id.main_content, new FileFragment())
                 .commit();
 
-        ((BottomNavigationView) findViewById(R.id.main_bottom_navigation)).setOnNavigationItemSelectedListener(this);
+        bottomNavigationView.setOnNavigationItemSelectedListener(this);
+
+        if (savedInstanceState != null) {
+            bottomNavigationView.setSelectedItemId(savedInstanceState.getInt("selectedItem"));
+        }
     }
 
     @Override
@@ -81,5 +91,11 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
                 .commit();
 
         return true;
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("selectedItem", bottomNavigationView.getSelectedItemId());
     }
 }

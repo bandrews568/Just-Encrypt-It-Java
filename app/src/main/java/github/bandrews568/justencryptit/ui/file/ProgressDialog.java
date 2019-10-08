@@ -77,7 +77,9 @@ public class ProgressDialog extends DialogFragment {
     public void setProgress(int progress) {
         this.progress = progress;
 
-        tvProgress.setText(progress + "%");
-        progressBar.setProgress(progress);
+        if (tvProgress != null && progressBar != null) {
+            tvProgress.setText(progress + "%");
+            progressBar.setProgress(progress);
+        }
     }
 }

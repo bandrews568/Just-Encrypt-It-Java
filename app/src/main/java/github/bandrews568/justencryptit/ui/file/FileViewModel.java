@@ -5,16 +5,25 @@ import android.os.Environment;
 import android.os.FileObserver;
 
 import androidx.annotation.Nullable;
-import androidx.collection.ArraySet;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.security.InvalidKeyException;
+import java.security.Key;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
+import javax.crypto.spec.SecretKeySpec;
 
 import github.bandrews568.justencryptit.model.EncryptFileWork;
 import github.bandrews568.justencryptit.model.EncryptionFileResult;
@@ -59,29 +68,38 @@ public class FileViewModel extends ViewModel {
         }
     };
 
-    public void encryptFile(String password, File inputFile, File outputFile) {
+    public AsyncFileEncryption encryptFile(String password, File inputFile, File outputFile) {
         EncryptFileWork encryptFileWork = new EncryptFileWork(password, inputFile, outputFile);
 
         AsyncFileEncryption asyncFileEncryption = new AsyncFileEncryption();
         asyncFileEncryption.setLiveData(encryptionLiveData);
         asyncFileEncryption.execute(encryptFileWork);
+
+        return asyncFileEncryption;
     }
 
-    public void encryptFileAction(String password, File inputFile, File outputFile) {
+    public AsyncFileEncryption encryptFileAction(String password, File inputFile, File outputFile) {
         EncryptFileWork encryptFileWork = new EncryptFileWork(password, inputFile, outputFile);
 
         AsyncFileEncryption asyncFileEncryption = new AsyncFileEncryption();
         asyncFileEncryption.setLiveData(encryptionActionLiveData);
         asyncFileEncryption.execute(encryptFileWork);
+
+        return asyncFileEncryption;
     }
 
-    public void decryptFile(String password, FileListItem fileListItem) {
+    public AsyncFileDecryption decryptFile(String password, FileListItem fileListItem) {
         File inputFile = new File(fileListItem.getLocation());
         // Remove the .jei file extension
         String outputFilePath = fileListItem.getLocation().replace(".jei", "");
         File outputFile = new File(outputFilePath);
         EncryptFileWork encryptFileWork = new EncryptFileWork(password, inputFile, outputFile);
-        new AsyncFileDecryption().execute(encryptFileWork);
+
+        AsyncFileDecryption asyncFileDecryption = new AsyncFileDecryption();
+        asyncFileDecryption.execute(encryptFileWork);
+
+        return asyncFileDecryption;
+
     }
 
     private void updateFiles() {
@@ -178,26 +196,65 @@ public class FileViewModel extends ViewModel {
         return cryptoProgressLiveData;
     }
 
-    private class AsyncFileEncryption extends AsyncTask<EncryptFileWork, Integer, EncryptionFileResult> {
+    public class AsyncFileEncryption extends AsyncTask<EncryptFileWork, Integer, EncryptionFileResult> {
 
         private SingleLiveEvent<EncryptionFileResult> liveData;
+        private File outputFile;
 
         @Override
         protected EncryptionFileResult doInBackground(EncryptFileWork... params) {
             backgroundFileWork.set(true);
 
             EncryptFileWork encryptFileWork = params[0];
+
+            outputFile = encryptFileWork.getOutputFile();
+
             EncryptionFileResult encryptionFileResult = new EncryptionFileResult();
 
-            try{
-                Encryption.encryptFile(encryptFileWork.getPassword(),
-                        encryptFileWork.getInputFile(),
-                        encryptFileWork.getOutputFile(),
-                        cryptoProgressLiveData);
+            try {
+                Key secretKey = new SecretKeySpec(encryptFileWork.getPassword().getBytes(), "AES");
+                Cipher cipher = Cipher.getInstance("AES");
+                cipher.init(Cipher.ENCRYPT_MODE, secretKey);
 
+                FileInputStream inputStream = new FileInputStream(encryptFileWork.getInputFile());
+                FileOutputStream outputStream = new FileOutputStream(outputFile);
 
-            } catch (CryptoException e) {
-                encryptionFileResult.setError(e);
+                byte[] input = new byte[2048];
+                int bytesRead;
+
+                long totalFileSize = encryptFileWork.getInputFile().length();
+                double percentUnit = 100.0 / totalFileSize;
+                long readLength = 0;
+
+                while ((bytesRead = inputStream.read(input)) != -1) {
+                    if (isCancelled()) break;
+
+                    byte[] output = cipher.update(input, 0, bytesRead);
+                    readLength += bytesRead;
+                    cryptoProgressLiveData.postValue((int) Math.round(percentUnit * readLength));
+
+                    if (output != null) {
+                        outputStream.write(output);
+                    }
+                }
+
+                if (!isCancelled()) {
+                    byte[] output = cipher.doFinal();
+                    if (output != null)
+                        outputStream.write(output);
+
+                    cryptoProgressLiveData.postValue(100);
+                }
+
+                inputStream.close();
+                outputStream.flush();
+                outputStream.close();
+
+            } catch (NoSuchPaddingException | NoSuchAlgorithmException
+                    | InvalidKeyException | BadPaddingException
+                    | IllegalBlockSizeException | IOException ex) {
+                CryptoException cryptoException = new CryptoException("Error encrypting/decrypting file", ex);
+                encryptionFileResult.setError(cryptoException);
             }
 
             return encryptionFileResult;
@@ -215,29 +272,80 @@ public class FileViewModel extends ViewModel {
             liveData.postValue(encryptionFileResult);
         }
 
+        @Override
+        protected void onCancelled(EncryptionFileResult result) {
+            super.onCancelled(result);
+
+            if (outputFile != null) {
+                outputFile.delete();
+            }
+        }
+
         public void setLiveData(SingleLiveEvent<EncryptionFileResult> liveData) {
             this.liveData = liveData;
         }
     }
 
-    private class AsyncFileDecryption extends AsyncTask<EncryptFileWork, Void, EncryptionFileResult> {
+    public class AsyncFileDecryption extends AsyncTask<EncryptFileWork, Void, EncryptionFileResult> {
+
+        private File outputFile;
 
         @Override
         protected EncryptionFileResult doInBackground(EncryptFileWork... params) {
             backgroundFileWork.set(true);
 
             EncryptFileWork encryptFileWork = params[0];
+
+            outputFile = encryptFileWork.getOutputFile();
+
             EncryptionFileResult encryptionFileResult = new EncryptionFileResult();
+            encryptionFileResult.setInputFile(encryptFileWork.getInputFile());
+            encryptionFileResult.setOutputFile(encryptFileWork.getOutputFile());
 
-            try{
-                Encryption.decryptFile(encryptFileWork.getPassword(),
-                        encryptFileWork.getInputFile(),
-                        encryptFileWork.getOutputFile(),
-                        cryptoProgressLiveData);
+            try {
+                Key secretKey = new SecretKeySpec(encryptFileWork.getPassword().getBytes(), "AES");
+                Cipher cipher = Cipher.getInstance("AES");
+                cipher.init(Cipher.DECRYPT_MODE, secretKey);
 
+                FileInputStream inputStream = new FileInputStream(encryptFileWork.getInputFile());
+                FileOutputStream outputStream = new FileOutputStream(outputFile);
 
-            } catch (CryptoException e) {
-                encryptionFileResult.setError(e);
+                byte[] input = new byte[2048];
+                int bytesRead;
+
+                long totalFileSize = encryptFileWork.getInputFile().length();
+                double percentUnit = 100.0 / totalFileSize;
+                long readLength = 0;
+
+                while ((bytesRead = inputStream.read(input)) != -1) {
+                    if (isCancelled()) break;
+
+                    byte[] output = cipher.update(input, 0, bytesRead);
+                    readLength += bytesRead;
+                    cryptoProgressLiveData.postValue((int) Math.round(percentUnit * readLength));
+
+                    if (output != null) {
+                        outputStream.write(output);
+                    }
+                }
+
+                if (!isCancelled()) {
+                    byte[] output = cipher.doFinal();
+                    if (output != null)
+                        outputStream.write(output);
+
+                    cryptoProgressLiveData.postValue(100);
+                }
+
+                inputStream.close();
+                outputStream.flush();
+                outputStream.close();
+
+            } catch (NoSuchPaddingException | NoSuchAlgorithmException
+                    | InvalidKeyException | BadPaddingException
+                    | IllegalBlockSizeException | IOException ex) {
+                CryptoException cryptoException = new CryptoException("Error encrypting/decrypting file", ex);
+                encryptionFileResult.setError(cryptoException);
             }
 
             return encryptionFileResult;
@@ -248,6 +356,15 @@ public class FileViewModel extends ViewModel {
             backgroundFileWork.set(false);
             populateFiles();
             decryptedLiveData.postValue(encryptionFileResult);
+        }
+
+        @Override
+        protected void onCancelled(EncryptionFileResult result) {
+            super.onCancelled(result);
+
+            if (outputFile != null) {
+                outputFile.delete();
+            }
         }
     }
 }

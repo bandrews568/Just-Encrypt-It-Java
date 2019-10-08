@@ -16,19 +16,15 @@
 
 <androidx.preference.PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <PreferenceCategory app:title="Encryption Algorithm">
+    <PreferenceCategory app:title="Text Encryption">
 
         <ListPreference
             app:defaultValue="Basic"
             app:entries="@array/algorithm_choices"
             app:entryValues="@array/algorithm_choices"
             app:key="algorithm_choice"
-            app:title="Strength"
+            app:title="Algorithm strength"
             app:useSimpleSummaryProvider="true" />
-
-    </PreferenceCategory>
-
-    <PreferenceCategory app:title="Display">
 
         <SwitchPreferenceCompat
             app:key="show_in_dialog"
