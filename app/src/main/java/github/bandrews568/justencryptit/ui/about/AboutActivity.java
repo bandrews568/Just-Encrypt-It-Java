@@ -14,11 +14,15 @@ import androidx.lifecycle.ViewModelProviders;
 
 import java.util.Calendar;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import github.bandrews568.justencryptit.BuildConfig;
 import github.bandrews568.justencryptit.R;
 
 public class AboutActivity extends AppCompatActivity {
+
+    @BindView(R.id.tv_about_version) TextView tvVersion;
 
     private AboutViewModel viewModel;
 
@@ -28,6 +32,7 @@ public class AboutActivity extends AppCompatActivity {
         setContentView(R.layout.activity_about);
         ButterKnife.bind(this);
         viewModel = ViewModelProviders.of(this).get(AboutViewModel.class);
+        tvVersion.setText(BuildConfig.VERSION_NAME);
     }
 
     @OnClick({R.id.llJustEncryptIt, R.id.llLicense, R.id.llAuthor, R.id.llSourceCode})

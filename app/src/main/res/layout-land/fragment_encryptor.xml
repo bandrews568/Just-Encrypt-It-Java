@@ -86,6 +86,7 @@
         android:background="@color/grey_3"
         android:ems="10"
         android:gravity="top"
+        android:maxLength="30000"
         android:hint="Enter text"
         android:inputType="textMultiLine"
         android:paddingStart="10dp"

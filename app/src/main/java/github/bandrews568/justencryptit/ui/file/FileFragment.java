@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.FileObserver;
+import android.text.format.Formatter;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -94,6 +95,8 @@ public class FileFragment extends Fragment implements PasswordDialog.PasswordDia
         if (progressDialog != null) {
             progressDialog.dismiss();
         }
+
+        viewModel.populateFiles();
     }
 
     @Override
@@ -153,7 +156,17 @@ public class FileFragment extends Fragment implements PasswordDialog.PasswordDia
             }
         }
 
+        long freeDiskSpace = new File(Environment.getExternalStorageDirectory().getPath()).getFreeSpace();
+
         File inputFile = new File(selectedFiles[0]);
+
+        if (inputFile.exists() && !inputFile.isDirectory()) {
+            if (inputFile.length() > freeDiskSpace) {
+                UiUtils.errorDialog(requireContext(), "Not enough free disk space to encrypt file");
+                return;
+            }
+        }
+
         File outputFile = new File(directory, inputFile.getName() + ".jei");
 
         progressDialog = ProgressDialog.newInstance("encrypt");
