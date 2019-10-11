@@ -61,7 +61,6 @@ public class FileViewModel extends ViewModel {
     private FileObserver fileObserver = new FileObserver(directory.getPath(), fileEvents) {
         @Override
         public void onEvent(int event, @Nullable String path) {
-            // Need a boolean flag here
             if (!backgroundFileWork.get()) {
                 updateFiles();
             }
@@ -100,6 +99,16 @@ public class FileViewModel extends ViewModel {
 
         return asyncFileDecryption;
 
+    }
+
+    private boolean checkAndCreateAppDirectory() {
+        File directory = new File(Environment.getExternalStorageDirectory() + File.separator + "JustEncryptIt");
+
+        if (!directory.exists()) {
+            return directory.mkdir();
+        }
+
+        return true;
     }
 
     private void updateFiles() {

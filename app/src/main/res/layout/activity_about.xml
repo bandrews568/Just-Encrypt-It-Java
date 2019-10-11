@@ -122,6 +122,7 @@
                                 app:fontFamily="sans-serif-medium" />
 
                             <TextView
+                                android:id="@+id/tv_about_version"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="1.1"

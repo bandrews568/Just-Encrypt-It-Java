@@ -95,7 +95,6 @@ public class EncryptorFragment extends Fragment {
         viewModel = ViewModelProviders.of(this).get(EncryptorViewModel.class);
         viewModel.getEncryptionLiveData().observe(this, encryptionResult -> {
             if (encryptionResult.getError() != null) {
-                encryptionResult.getError().printStackTrace();
                 if (encryptionResult.getError() instanceof EncryptionInitializationException) {
                     tilPassword.setError("Invalid password");
                 } else if (encryptionResult.getError() instanceof EncryptionOperationNotPossibleException
@@ -104,6 +103,8 @@ public class EncryptorFragment extends Fragment {
                 } else if (encryptionResult.getError() instanceof BadPaddingException) {
                     tilPassword.setError("Invalid password");
                 }
+            } else if (encryptionResult.getText().length() > 30000) {
+                UiUtils.errorToast(requireContext(), "Over 30,000 character limit");
             } else {
                 boolean showInDialog = PreferenceManager.getDefaultSharedPreferences(getActivity()).getBoolean("show_in_dialog", false);
 
