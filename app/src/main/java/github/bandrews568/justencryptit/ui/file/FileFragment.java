@@ -1,27 +1,18 @@
 package github.bandrews568.justencryptit.ui.file;
 
 import android.Manifest;
-import android.app.Dialog;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.FileObserver;
-import android.text.format.Formatter;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
@@ -32,8 +23,6 @@ import com.github.angads25.filepicker.view.FilePickerDialog;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.material.tabs.TabLayout;
 
 import java.io.File;
@@ -50,7 +39,7 @@ public class FileFragment extends Fragment implements PasswordDialog.PasswordDia
 
     @BindView(R.id.view_pager_file_fragment) ViewPager viewPager;
     @BindView(R.id.tab_layout_file_fragment) TabLayout tabLayout;
-    @BindView(R.id.adView) AdView adView;
+    @BindView(R.id.ad_view_file_fragment) AdView adView;
 
     // Butterknife
     private Unbinder unbinder;
@@ -72,17 +61,17 @@ public class FileFragment extends Fragment implements PasswordDialog.PasswordDia
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        PagerAdapter pagerAdapter = new FileTabsPagerAdapter(getChildFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
-        viewPager.setAdapter(pagerAdapter);
-
-        tabLayout.setupWithViewPager(viewPager);
-
         MobileAds.initialize(requireContext(), initializationStatus -> {
             // TODO
         });
 
         AdRequest adRequest = new AdRequest.Builder().build();
         adView.loadAd(adRequest);
+
+        PagerAdapter pagerAdapter = new FileTabsPagerAdapter(getChildFragmentManager(), FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
+        viewPager.setAdapter(pagerAdapter);
+
+        tabLayout.setupWithViewPager(viewPager);
     }
 
     @Override

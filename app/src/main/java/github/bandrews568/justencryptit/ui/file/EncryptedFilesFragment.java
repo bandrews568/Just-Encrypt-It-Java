@@ -2,6 +2,7 @@ package github.bandrews568.justencryptit.ui.file;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
@@ -11,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -48,6 +51,23 @@ public class EncryptedFilesFragment extends Fragment implements OnListItemClickL
     }
 
     @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                FloatingActionButton fabChooseFile = requireActivity().findViewById(R.id.fab_file_choose);
+                if (dy > 0) {
+                    fabChooseFile.hide();
+                } else if (dy < 0) {
+                    fabChooseFile.show();
+                }
+            }
+        });
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
@@ -74,6 +94,12 @@ public class EncryptedFilesFragment extends Fragment implements OnListItemClickL
 
         if (progressDialog != null) {
             progressDialog.dismiss();
+        }
+
+        FloatingActionButton fabChooseFile = requireActivity().findViewById(R.id.fab_file_choose);
+
+        if (!fabChooseFile.isShown()) {
+            fabChooseFile.show();
         }
     }
 

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/grey_5">
+    android:background="@color/grey_10">
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fab_file_choose"
@@ -15,7 +15,7 @@
         android:clickable="true"
         android:tint="#ffffff"
         app:backgroundTint="?attr/colorAccent"
-        app:layout_constraintBottom_toTopOf="@+id/adView"
+        app:layout_constraintBottom_toTopOf="@+id/ad_view_file_fragment"
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@drawable/ic_file_document_outline" />
 
@@ -51,22 +51,20 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="@color/grey_10"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/ad_view_file_fragment"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tab_layout_file_fragment"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintTop_toBottomOf="@+id/tab_layout_file_fragment">
 
     </androidx.viewpager.widget.ViewPager>
 
     <com.google.android.gms.ads.AdView
-        xmlns:ads="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/adView"
-        android:layout_width="0dp"
+        android:id="@+id/ad_view_file_fragment"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        ads:adSize="BANNER"
-        ads:adUnitId="ca-app-pub-3940256099942544/6300978111"
+        app:adSize="BANNER"
+        app:adUnitId="ca-app-pub-3940256099942544/6300978111"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
