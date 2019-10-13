@@ -1,6 +1,5 @@
 package github.bandrews568.justencryptit.ui.file;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -35,6 +34,16 @@ public class PasswordDialog extends DialogFragment {
     private PasswordDialogListener passwordDialogListener;
     private Unbinder unbinder;
 
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+        View view = inflater.inflate(R.layout.dialog_password, container);
+        unbinder = ButterKnife.bind(this, view);
+        return view;
+    }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -45,16 +54,6 @@ public class PasswordDialog extends DialogFragment {
         lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
 
         getDialog().getWindow().setAttributes(lp);
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        getDialog().requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-        View view = inflater.inflate(R.layout.dialog_password, container);
-        unbinder = ButterKnife.bind(this, view);
-        return view;
     }
 
     @Override

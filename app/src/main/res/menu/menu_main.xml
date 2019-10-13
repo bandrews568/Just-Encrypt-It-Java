@@ -5,6 +5,9 @@
         android:id="@+id/action_about"
         android:title="About" />
     <item
+        android:id="@+id/action_feedback"
+        android:title="@string/title_feedback" />
+    <item
         android:id="@+id/action_settings"
         android:title="@string/title_activity_settings" />
 </menu>

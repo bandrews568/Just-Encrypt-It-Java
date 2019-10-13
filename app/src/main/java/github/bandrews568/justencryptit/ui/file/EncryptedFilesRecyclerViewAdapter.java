@@ -1,9 +1,5 @@
 package github.bandrews568.justencryptit.ui.file;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Context;
 import android.text.format.DateFormat;
 import android.text.format.Formatter;
@@ -13,12 +9,16 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import github.bandrews568.justencryptit.R;
 import github.bandrews568.justencryptit.model.FileListItem;
-
-import java.util.List;
 
 
 public class EncryptedFilesRecyclerViewAdapter extends RecyclerView.Adapter<EncryptedFilesRecyclerViewAdapter.ViewHolder> {

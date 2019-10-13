@@ -2,14 +2,13 @@ package github.bandrews568.justencryptit.ui.main;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ShareCompat;
 import androidx.core.view.ViewCompat;
 import androidx.fragment.app.Fragment;
 
@@ -17,9 +16,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import github.bandrews568.justencryptit.R;
 import github.bandrews568.justencryptit.ui.about.AboutActivity;
 import github.bandrews568.justencryptit.ui.encryptor.EncryptorFragment;
-import github.bandrews568.justencryptit.R;
 import github.bandrews568.justencryptit.ui.file.FileFragment;
 import github.bandrews568.justencryptit.ui.settings.SettingsActivity;
 
@@ -61,6 +60,15 @@ public class MainActivity extends AppCompatActivity implements BottomNavigationV
         switch (item.getItemId()) {
             case R.id.action_about:
                 startActivity(new Intent(this, AboutActivity.class));
+                return true;
+            case R.id.action_feedback:
+                ShareCompat.IntentBuilder.from(this)
+                    .setType("message/rfc822")
+                    .addEmailTo("justencryptitapp@gmail.com")
+                    .setSubject("App Feedback")
+                    .setText("Feedback:")
+                    .setChooserTitle("Send Feedback")
+                    .startChooser();
                 return true;
             case R.id.action_settings:
                 startActivity(new Intent(this, SettingsActivity.class));

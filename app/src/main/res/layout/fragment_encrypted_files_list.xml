@@ -16,7 +16,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:context=".ui.file.EncryptedFilesFragment"
-        tools:listitem="@layout/fragment_encrypted_files" />
+        tools:listitem="@layout/fragment_encrypted_files"
+        android:paddingBottom="88dp"
+        android:clipToPadding="false" />
 
     <include
         android:id="@+id/view_empty_files_encrypted_files"

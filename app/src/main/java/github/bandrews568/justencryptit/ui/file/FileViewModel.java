@@ -29,7 +29,6 @@ import github.bandrews568.justencryptit.model.EncryptFileWork;
 import github.bandrews568.justencryptit.model.EncryptionFileResult;
 import github.bandrews568.justencryptit.model.FileListItem;
 import github.bandrews568.justencryptit.utils.CryptoException;
-import github.bandrews568.justencryptit.utils.Encryption;
 import github.bandrews568.justencryptit.utils.SingleLiveEvent;
 
 public class FileViewModel extends ViewModel {

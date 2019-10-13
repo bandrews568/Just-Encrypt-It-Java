@@ -1,19 +1,19 @@
 package github.bandrews568.justencryptit.ui.file;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.RecyclerView;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,10 +22,6 @@ import github.bandrews568.justencryptit.R;
 import github.bandrews568.justencryptit.model.EncryptionFileResult;
 import github.bandrews568.justencryptit.model.FileListItem;
 import github.bandrews568.justencryptit.utils.UiUtils;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 public class EncryptedFilesFragment extends Fragment implements OnListItemClickListener, OnEncryptActionClickListener, PasswordDialog.PasswordDialogListener {
 
@@ -48,23 +44,6 @@ public class EncryptedFilesFragment extends Fragment implements OnListItemClickL
         encryptedFilesRecyclerViewAdapter.setListener(this);
         recyclerView.setAdapter(encryptedFilesRecyclerViewAdapter);
         return view;
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                FloatingActionButton fabChooseFile = requireActivity().findViewById(R.id.fab_file_choose);
-                if (dy > 0) {
-                    fabChooseFile.hide();
-                } else if (dy < 0) {
-                    fabChooseFile.show();
-                }
-            }
-        });
     }
 
     @Override
@@ -94,12 +73,6 @@ public class EncryptedFilesFragment extends Fragment implements OnListItemClickL
 
         if (progressDialog != null) {
             progressDialog.dismiss();
-        }
-
-        FloatingActionButton fabChooseFile = requireActivity().findViewById(R.id.fab_file_choose);
-
-        if (!fabChooseFile.isShown()) {
-            fabChooseFile.show();
         }
     }
 
