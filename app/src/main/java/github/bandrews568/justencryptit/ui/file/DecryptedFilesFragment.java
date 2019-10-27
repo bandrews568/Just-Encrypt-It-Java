@@ -67,6 +67,7 @@ public class DecryptedFilesFragment extends Fragment implements OnListItemClickL
         super.onStart();
 
         toggleEmptyState();
+        viewModel.populateFiles();
     }
 
     @Override
