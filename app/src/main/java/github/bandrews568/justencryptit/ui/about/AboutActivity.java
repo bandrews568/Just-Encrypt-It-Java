@@ -10,6 +10,7 @@ import android.view.WindowManager;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ShareCompat;
 import androidx.lifecycle.ViewModelProviders;
 
 import java.util.Calendar;
@@ -35,10 +36,19 @@ public class AboutActivity extends AppCompatActivity {
         tvVersion.setText(BuildConfig.VERSION_NAME);
     }
 
-    @OnClick({R.id.llJustEncryptIt, R.id.llLicense, R.id.llAuthor, R.id.llSourceCode})
+    @OnClick({R.id.llJustEncryptIt, R.id.llLicense, R.id.llAuthor, R.id.llSourceCode, R.id.llEmail})
     public void itemClicked(View v) {
         if (v.getId() == R.id.llLicense) {
             showLicenseDialog();
+            return;
+        }
+
+        if (v.getId() == R.id.llEmail) {
+            ShareCompat.IntentBuilder.from(this)
+                    .setType("message/rfc822")
+                    .addEmailTo("justencryptitapp@gmail.com")
+                    .setChooserTitle("Send Email")
+                    .startChooser();
             return;
         }
 

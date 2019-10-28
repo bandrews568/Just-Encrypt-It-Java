@@ -1,18 +1,16 @@
 package github.bandrews568.justencryptit.ui.file;
 
 import android.os.Bundle;
+import android.os.Environment;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.os.Environment;
-import android.os.FileObserver;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -69,6 +67,7 @@ public class DecryptedFilesFragment extends Fragment implements OnListItemClickL
         super.onStart();
 
         toggleEmptyState();
+        viewModel.populateFiles();
     }
 
     @Override

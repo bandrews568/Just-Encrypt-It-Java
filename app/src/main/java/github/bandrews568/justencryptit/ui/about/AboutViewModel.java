@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModel;
 public class AboutViewModel extends ViewModel {
 
     public Uri justEncryptItUri() {
-        String justEncryptItUrl = "https://play.google.com/store/apps/details?id=us.brandonandrews.justencryptit&hl=en_US";
+        String justEncryptItUrl = "https://play.google.com/store/apps/details?id=github.bandrews568.justencryptit&hl=en_US";
         return Uri.parse(justEncryptItUrl);
     }
 

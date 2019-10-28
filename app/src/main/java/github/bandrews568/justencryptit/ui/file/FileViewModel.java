@@ -29,7 +29,6 @@ import github.bandrews568.justencryptit.model.EncryptFileWork;
 import github.bandrews568.justencryptit.model.EncryptionFileResult;
 import github.bandrews568.justencryptit.model.FileListItem;
 import github.bandrews568.justencryptit.utils.CryptoException;
-import github.bandrews568.justencryptit.utils.Encryption;
 import github.bandrews568.justencryptit.utils.SingleLiveEvent;
 
 public class FileViewModel extends ViewModel {
@@ -101,20 +100,14 @@ public class FileViewModel extends ViewModel {
 
     }
 
-    private boolean checkAndCreateAppDirectory() {
-        File directory = new File(Environment.getExternalStorageDirectory() + File.separator + "JustEncryptIt");
-
-        if (!directory.exists()) {
-            return directory.mkdir();
-        }
-
-        return true;
-    }
-
     private void updateFiles() {
         File directory = new File(Environment.getExternalStorageDirectory() + File.separator + "JustEncryptIt");
 
-        if (!directory.exists() || directory.listFiles() == null) return;
+        if (!directory.exists()) {
+            if (!directory.mkdir()) return;
+        }
+
+        if (directory.listFiles() == null) return;
 
         encryptedFilesList.clear();
         decryptedFilesList.clear();
@@ -143,7 +136,11 @@ public class FileViewModel extends ViewModel {
     public void populateFiles() {
         File directory = new File(Environment.getExternalStorageDirectory() + File.separator + "JustEncryptIt");
 
-        if (!directory.exists() || directory.listFiles() == null) return;
+        if (!directory.exists()) {
+            if (!directory.mkdir()) return;
+        }
+
+        if (directory.listFiles() == null) return;
 
         encryptedFilesList.clear();
         decryptedFilesList.clear();
@@ -285,6 +282,8 @@ public class FileViewModel extends ViewModel {
         protected void onCancelled(EncryptionFileResult result) {
             super.onCancelled(result);
 
+            backgroundFileWork.set(false);
+
             if (outputFile != null) {
                 outputFile.delete();
             }
@@ -370,6 +369,8 @@ public class FileViewModel extends ViewModel {
         @Override
         protected void onCancelled(EncryptionFileResult result) {
             super.onCancelled(result);
+
+            backgroundFileWork.set(false);
 
             if (outputFile != null) {
                 outputFile.delete();

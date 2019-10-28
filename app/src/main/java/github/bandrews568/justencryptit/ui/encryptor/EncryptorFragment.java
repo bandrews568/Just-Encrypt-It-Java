@@ -18,8 +18,6 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -28,7 +26,9 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
-import com.google.android.material.bottomnavigation.BottomNavigationMenu;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -50,14 +50,13 @@ public class EncryptorFragment extends Fragment {
 
     @BindView(R.id.tilPassword) TextInputLayout tilPassword;
     @BindView(R.id.etEnterText) EditText etEnterText;
-
     @BindView(R.id.btnEncrypt) Button btnEncrypt;
     @BindView(R.id.btnDecrypt) Button btnDecrypt;
     @BindView(R.id.btnPaste) ImageButton btnPaste;
     @BindView(R.id.btnCopy) ImageButton btnCopy;
     @BindView(R.id.btnShare) ImageButton btnShare;
-
     @BindView(R.id.cbSavePassword) CheckBox cbSavePassword;
+    @BindView(R.id.ad_view_encryptor_fragment) AdView adView;
 
     // Butterknife
     private Unbinder unbinder;
@@ -90,6 +89,32 @@ public class EncryptorFragment extends Fragment {
     }
 
     @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        MobileAds.initialize(requireContext(), initializationStatus -> {
+            // TODO
+        });
+
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
+
+        keyboardManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+
+        sharedPreferences = getActivity().getSharedPreferences("password", Context.MODE_PRIVATE);
+
+        String getPassword = sharedPreferences.getString("password", "none");
+        boolean savePasswordChecked = sharedPreferences.getBoolean("checked", false);
+
+        // Check to see if user has checked that they wanted to remember a password.
+        // If so, populate etPassword with that password.
+        if (savePasswordChecked && !getPassword.equals("none")) {
+            tilPassword.getEditText().setText(getPassword);
+            cbSavePassword.setChecked(true);
+        }
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         viewModel = ViewModelProviders.of(this).get(EncryptorViewModel.class);
@@ -117,26 +142,6 @@ public class EncryptorFragment extends Fragment {
                 }
             }
         });
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-
-        keyboardManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-
-        sharedPreferences = getActivity().getSharedPreferences("password", Context.MODE_PRIVATE);
-
-        String getPassword = sharedPreferences.getString("password", "none");
-        boolean savePasswordChecked = sharedPreferences.getBoolean("checked", false);
-
-        // Check to see if user has checked that they wanted to remember a password.
-        // If so, populate etPassword with that password.
-        if (savePasswordChecked && !getPassword.equals("none")) {
-            tilPassword.getEditText().setText(getPassword);
-            cbSavePassword.setChecked(true);
-        }
     }
 
     @Override

@@ -15,7 +15,9 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:listitem="@layout/fragment_decrypted_files" />
+        tools:listitem="@layout/fragment_decrypted_files"
+        android:paddingBottom="88dp"
+        android:clipToPadding="false" />
 
     <include
         android:id="@+id/view_empty_files_decrypted_files"

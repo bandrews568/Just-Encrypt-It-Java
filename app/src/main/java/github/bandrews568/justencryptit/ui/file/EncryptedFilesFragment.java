@@ -1,16 +1,19 @@
 package github.bandrews568.justencryptit.ui.file;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -19,10 +22,6 @@ import github.bandrews568.justencryptit.R;
 import github.bandrews568.justencryptit.model.EncryptionFileResult;
 import github.bandrews568.justencryptit.model.FileListItem;
 import github.bandrews568.justencryptit.utils.UiUtils;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 public class EncryptedFilesFragment extends Fragment implements OnListItemClickListener, OnEncryptActionClickListener, PasswordDialog.PasswordDialogListener {
 
@@ -66,6 +65,7 @@ public class EncryptedFilesFragment extends Fragment implements OnListItemClickL
         super.onStart();
 
         toggleEmptyState();
+        viewModel.populateFiles();
     }
 
     @Override

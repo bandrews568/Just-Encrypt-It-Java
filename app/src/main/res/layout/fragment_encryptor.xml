@@ -106,10 +106,10 @@
         android:id="@+id/linearLayout"
         android:layout_width="0dp"
         android:layout_height="?attr/actionBarSize"
-        android:layout_marginBottom="72dp"
+        android:layout_marginBottom="24dp"
         android:background="@color/grey_10"
         android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/ad_view_encryptor_fragment"
         app:layout_constraintEnd_toEndOf="@+id/etEnterText"
         app:layout_constraintStart_toStartOf="@+id/etEnterText">
 
@@ -152,5 +152,15 @@
             android:src="?attr/actionModeShareDrawable" />
 
     </LinearLayout>
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/ad_view_encryptor_fragment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:adSize="BANNER"
+        app:adUnitId="ca-app-pub-1031932120656216/6301104723"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
