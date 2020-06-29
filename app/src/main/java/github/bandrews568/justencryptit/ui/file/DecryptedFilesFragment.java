@@ -122,7 +122,7 @@ public class DecryptedFilesFragment extends Fragment implements OnListItemClickL
             File inputFile = new File(fileListItem.getLocation());
             File outputFile = new File(directory, inputFile.getName() + ".jei");
 
-            progressDialog = ProgressDialog.newInstance("decrypt");
+            progressDialog = ProgressDialog.newInstance("encrypt");
             progressDialog.show(getFragmentManager(), null);
 
             asyncFileEncryption = viewModel.encryptFileAction(password, inputFile, outputFile);
